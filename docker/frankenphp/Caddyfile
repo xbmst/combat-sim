@@ -1,0 +1,27 @@
+{
+    auto_https off
+
+    frankenphp {
+        worker {
+            file /app/public/index.php
+            num {$FRANKENPHP_WORKERS:1}
+        }
+    }
+}
+
+:80 {
+    root * /app/public
+
+    encode zstd br gzip
+
+    handle /healthz {
+        respond "ok" 200
+    }
+
+    php_server
+
+    log {
+        output stdout
+        format console
+    }
+}
