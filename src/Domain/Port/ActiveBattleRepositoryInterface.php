@@ -9,4 +9,6 @@ use App\Domain\Model\Entity\Battle;
 interface ActiveBattleRepositoryInterface
 {
     public function save(Battle $battle): void;
+
+    public function findById(string $battleId): Battle;
 }

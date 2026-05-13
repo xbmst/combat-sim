@@ -14,4 +14,9 @@ class RedisActiveBattleRepository implements ActiveBattleRepositoryInterface
     {
         // TODO: Implement save() method.
     }
+
+    public function findById(string $battleId): Battle
+    {
+        // TODO: Implement
+    }
 }
