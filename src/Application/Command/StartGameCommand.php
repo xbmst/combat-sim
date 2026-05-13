@@ -11,5 +11,6 @@ class StartGameCommand
         public string $playerId,
         public string $heroClassId,
         public array $equippedItemsIds,
-    ){}
+    ) {
+    }
 }
