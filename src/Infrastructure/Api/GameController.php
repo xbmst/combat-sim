@@ -6,6 +6,7 @@ namespace App\Infrastructure\Api;
 
 use App\Application\Command\StartGameCommand;
 use OpenApi\Attributes as OA;
+use Nelmio\ApiDocBundle\Attribute\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,8 +22,18 @@ class GameController extends AbstractController
     {
     }
 
-    #[Route('/api/games/start', name: 'api_games_start', methods: [Request::METHOD_POST])]
-    #[OA\Post(summary: 'Start a new game')]
+    #[Route(path: '/api/games/start', name: 'api_games_start', methods: [Request::METHOD_POST])]
+    #[OA\Post(
+        summary: 'Start a new game',
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Game started successfully',
+                content: new OA\JsonContent(ref: new Model(type: StartGameCommand::class))
+            )
+        ]
+    )]
+    #[OA\Tag(name: 'Games')]
     public function startGame(#[MapRequestPayload] StartGameCommand $command): JsonResponse
     {
         try {

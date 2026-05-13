@@ -6,6 +6,6 @@ nelmio_api_doc:
             version: 1.0.0
     areas:
         default:
-            with_attribute: true
+            with_attribute: false
             path_patterns:
                 - ^/api(?!/doc$)
