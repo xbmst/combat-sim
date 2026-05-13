@@ -9,7 +9,9 @@ RUN install-php-extensions \
     intl \
     opcache \
     pcntl \
-    zip
+    zip \
+    pdo_pgsql \
+    redis
 
 # Composer bootstrap
 FROM php_base AS composer_base
