@@ -39,9 +39,9 @@ class GameController extends AbstractController
         try {
             $this->commandBus->dispatch($command);
         } catch (HandlerFailedException $e) {
-            // TODO: handle real error
+            throw $e;
         } catch (ExceptionInterface $e) {
-            // TODO: handle Messenger errors (eg no handler found)
+            throw $e;
         }
 
         return $this->json(['status' => 'game started!']);

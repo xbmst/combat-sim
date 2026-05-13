@@ -23,7 +23,7 @@ class RoundControllerTest extends WebTestCase
     {
         $battleId = Uuid::v7()->toRfc4122();
         $playerId = Uuid::v7()->toRfc4122();
-        $heroClassId = 'Ninja';
+        $heroClassId = 'MedievalNinja';
         $equippedItemsIds = [];
 
         $this->client->request(

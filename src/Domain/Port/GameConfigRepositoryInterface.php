@@ -17,4 +17,6 @@ interface GameConfigRepositoryInterface
     public function getItemsByIds(array $ids): array;
 
     public function getRandomEnemyClass(): GameClass;
+
+    public function getClassByName(string $name): GameClass;
 }
