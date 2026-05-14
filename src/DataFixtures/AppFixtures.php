@@ -19,7 +19,7 @@ class AppFixtures extends Fixture
             Uuid::v7()->toRfc4122(),
             'MedievalNinja',
             150,
-            5,
+            6,
             5,
             5
         );

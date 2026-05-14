@@ -6,10 +6,10 @@ namespace App\Application\Command;
 
 use App\Domain\Model\Entity\Battle;
 use App\Domain\Model\Stats;
+use App\Domain\Model\ValueObject\HeroLoadout;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use App\Domain\Port\GameConfigRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Uid\Uuid;
 
 #[AsMessageHandler]
 readonly class StartGameCommandHandler
@@ -22,17 +22,15 @@ readonly class StartGameCommandHandler
 
     public function __invoke(StartGameCommand $command): void
     {
-        $heroClass = $this->configRepository->getClassById($command->heroClassId);
+        $heroClass = $this->configRepository->getClassByName($command->heroClassId);
         $items = $this->configRepository->getItemsByIds($command->equippedItemsIds);
 
-        $enemyClass = $this->configRepository->getRandomEnemyClass();
+        $heroLoadout = new HeroLoadout($heroClass, $items);
 
-        $heroStats = Stats::buildFromClassAndItems($heroClass, $items);
-        $enemyStats = Stats::buildFromClassAndItems($enemyClass, []);
+        $heroStats = Stats::buildFromClassAndItems($heroLoadout->gameClass, $heroLoadout->items);
+        $enemyStats = Stats::buildFromClassAndItems($this->configRepository->getRandomEnemyClass(), []);
 
-        $battleId = Uuid::v7()->toRfc4122();
-
-        $battle = new Battle($battleId, $heroStats, $enemyStats);
+        $battle = new Battle($command->battleId, $heroStats, $enemyStats);
 
         $this->activeBattleRepository->save($battle);
     }
