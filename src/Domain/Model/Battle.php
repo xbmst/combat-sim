@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Model\Entity;
-
-use App\Domain\Model\Stats;
+namespace App\Domain\Model;
 
 class Battle
 {
@@ -19,7 +17,7 @@ class Battle
 
     public function execute(): void
     {
-        $damage = max(0, $this->heroStats->attack - $this->enemyStats->defense);
+        $damage = max(0, $this->heroStats->attack - $this->enemyStats->defense); // TODO: damage calculator service
         $this->enemyStats = $this->enemyStats->takeDamage($damage);
 
         $this->roundLogs[] = "Hero hit Enemy for $damage damage!";

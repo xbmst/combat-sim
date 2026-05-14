@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Redis;
 
 use App\Domain\Exception\BattleNotFoundException;
-use App\Domain\Model\Entity\Battle;
+use App\Domain\Model\Battle;
 use App\Domain\Model\Stats;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use Redis;
@@ -29,7 +29,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
             'battleId' => $battle->getBattleId(),
             'currentRound' => $battle->getCurrentRound(),
             'roundLogs' => $battle->getRoundLogs(),
-            'hero' => [
+            'hero' => [ // TODO: toArray()
                 'maxHp' => $heroStats->maxHp,
                 'currentHp' => $heroStats->currentHp,
                 'attack' => $heroStats->attack,
@@ -60,7 +60,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
         }
 
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-
+        // TODO: fromArray()
         $heroStats = new Stats(
             $data['hero']['maxHp'],
             $data['hero']['currentHp'],
@@ -84,5 +84,10 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
             $data['currentRound'],
             $data['roundLogs'],
         );
+    }
+
+    public function delete(string $id): void
+    {
+        $this->redis->del(self::PREFIX . $id);
     }
 }

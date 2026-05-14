@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Query;
 
-use App\Domain\Model\ValueObject\GameClass;
-use App\Domain\Model\ValueObject\Item;
+use App\Domain\ValueObject\GameClass;
+use App\Domain\ValueObject\Item;
 
 readonly class GetSetupDataResponse
 {

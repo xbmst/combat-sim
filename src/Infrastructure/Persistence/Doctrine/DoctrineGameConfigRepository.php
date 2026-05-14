@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Doctrine;
 
-use App\Domain\Model\ValueObject\GameClass;
-use App\Domain\Model\ValueObject\Item;
+use App\Domain\Exception\HeroClassNotFoundException;
 use App\Domain\Port\GameConfigRepositoryInterface;
+use App\Domain\ValueObject\GameClass;
+use App\Domain\ValueObject\Item;
 use App\Infrastructure\Persistence\Doctrine\Entity\ClassSchema;
 use App\Infrastructure\Persistence\Doctrine\Entity\ItemSchema;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use DomainException;
 
 class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
 {
-    private EntityRepository $gameClassRepository;
-    private EntityRepository $itemsRepository;
-
     public function __construct(private readonly EntityManagerInterface $em)
     {
     }
@@ -27,7 +23,7 @@ class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
         $classSchema = $this->em->getRepository(ClassSchema::class)->find($id);
 
         if (!$classSchema) {
-            throw new DomainException(sprintf('Hero class with ID "%s" not found', $id));
+            throw new HeroClassNotFoundException(sprintf('Hero class with ID "%s" not found', $id));
         }
 
         return new GameClass(
@@ -45,7 +41,7 @@ class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
         $classSchema = $this->em->getRepository(ClassSchema::class)->findOneBy(['name' => $name]);
 
         if (!$classSchema) {
-            throw new DomainException(sprintf('Hero class with name "%s" not found', $name));
+            throw new HeroClassNotFoundException(sprintf('Hero class with name "%s" not found', $name));
         }
 
         return new GameClass(
@@ -84,7 +80,7 @@ class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
         $classSchema = $classSchemas[0];
 
         if (!$classSchema) {
-            throw new DomainException('Enemy class not found');
+            throw new HeroClassNotFoundException('Enemy class not found');
         }
 
         return new GameClass(

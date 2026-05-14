@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Query;
 
-use App\Domain\Model\ValueObject\HeroLoadout;
+use App\Domain\ValueObject\HeroLoadout;
 use Doctrine\DBAL\Connection;
 
 class GetSetupDataQueryHandler

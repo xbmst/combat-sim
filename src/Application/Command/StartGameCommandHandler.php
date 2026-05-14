@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Command;
 
-use App\Domain\Model\Entity\Battle;
+use App\Domain\Model\Battle;
 use App\Domain\Model\Stats;
-use App\Domain\Model\ValueObject\HeroLoadout;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use App\Domain\Port\GameConfigRepositoryInterface;
+use App\Domain\ValueObject\HeroLoadout;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
