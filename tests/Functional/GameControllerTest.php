@@ -34,6 +34,7 @@ class GameControllerTest extends WebTestCase
                 'playerId' => $playerId,
                 'heroClassId' => $heroClassId,
                 'equippedItemsIds' => $equippedItemsIds,
+                'targetBattles' => 3,
             ], JSON_THROW_ON_ERROR)
         );
 

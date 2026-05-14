@@ -29,6 +29,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
             'battleId' => $battle->getBattleId(),
             'currentRound' => $battle->getCurrentRound(),
             'roundLogs' => $battle->getRoundLogs(),
+            'targetBattles' => $battle->getTargetBattles(),
             'hero' => [ // TODO: toArray()
                 'maxHp' => $heroStats->maxHp,
                 'currentHp' => $heroStats->currentHp,
@@ -81,6 +82,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
             $battleId,
             $heroStats,
             $enemyStats,
+            $data['targetBattles'],
             $data['currentRound'],
             $data['roundLogs'],
         );

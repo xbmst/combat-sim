@@ -10,9 +10,15 @@ class Battle
         private readonly string $battleId,
         private readonly Stats $heroStats,
         private Stats $enemyStats,
-        private readonly int $currentRound = 1,
-        private array $roundLogs = []
+        private readonly int $targetBattles,
+        private int $currentRound = 1,
+        private array $roundLogs = [],
     ) {
+    }
+
+    public function getTargetBattles(): int
+    {
+        return $this->targetBattles;
     }
 
     public function execute(): void
@@ -46,5 +52,13 @@ class Battle
     public function getRoundLogs(): array
     {
         return $this->roundLogs;
+    }
+
+    public function setupNextBattle(Stats $newEnemyStats): void
+    {
+        // TODO: wrappers
+        $this->currentRound++;
+        $this->roundLogs = [];
+        $this->enemyStats = $newEnemyStats;
     }
 }

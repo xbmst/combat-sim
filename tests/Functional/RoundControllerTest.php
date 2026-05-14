@@ -26,6 +26,7 @@ class RoundControllerTest extends WebTestCase
         $heroClassId = 'MedievalNinja';
         $equippedItemsIds = [];
 
+        $opponentsCount = 5;
         $this->client->request(
             'POST',
             '/api/games/start',
@@ -35,16 +36,19 @@ class RoundControllerTest extends WebTestCase
                 'playerId' => $playerId,
                 'heroClassId' => $heroClassId,
                 'equippedItemsIds' => $equippedItemsIds,
+                'targetBattles' => $opponentsCount,
             ], JSON_THROW_ON_ERROR)
         );
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
 
-        $this->client->request(
-            'POST',
-            "/api/battles/$battleId/next-round",
-        );
+        for ($i = 0; $i < $opponentsCount; ++$i) {
+            $this->client->request(
+                'POST',
+                "/api/battles/$battleId/next-round",
+            );
 
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+            self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        }
     }
 }
