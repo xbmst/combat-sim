@@ -8,12 +8,12 @@ use App\Domain\Model\Stats;
 
 class Battle
 {
-    private array $roundLogs = [];
-
     public function __construct(
-        private string $battleId,
+        private readonly string $battleId,
         private readonly Stats $heroStats,
         private Stats $enemyStats,
+        private readonly int $currentRound = 1,
+        private array $roundLogs = []
     ) {
     }
 
@@ -23,5 +23,30 @@ class Battle
         $this->enemyStats = $this->enemyStats->takeDamage($damage);
 
         $this->roundLogs[] = "Hero hit Enemy for $damage damage!";
+    }
+
+    public function getBattleId(): string
+    {
+        return $this->battleId;
+    }
+
+    public function getHeroStats(): Stats
+    {
+        return $this->heroStats;
+    }
+
+    public function getEnemyStats(): Stats
+    {
+        return $this->enemyStats;
+    }
+
+    public function getCurrentRound(): int
+    {
+        return $this->currentRound;
+    }
+
+    public function getRoundLogs(): array
+    {
+        return $this->roundLogs;
     }
 }

@@ -27,9 +27,9 @@ class RoundController extends AbstractController
         try {
             $this->commandBus->dispatch(new PlayRoundCommand($id));
         } catch (HandlerFailedException $e) {
-            // TODO: handle error
+            throw $e;
         } catch (ExceptionInterface $e) {
-            // TODO: handle error
+            throw $e;
         }
 
         return $this->json(['status' => 'round processed']);

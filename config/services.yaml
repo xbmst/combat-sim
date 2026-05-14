@@ -25,3 +25,6 @@ services:
         factory: [ 'Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection' ]
         arguments:
             - '%env(REDIS_URL)%'
+
+    App\Domain\Port\ActiveBattleRepositoryInterface:
+        alias: App\Infrastructure\Persistence\Redis\RedisBattleRepository
