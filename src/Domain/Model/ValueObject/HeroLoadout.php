@@ -8,7 +8,7 @@ use App\Domain\Exception\InvalidLoadoutException;
 
 readonly class HeroLoadout
 {
-    private const int MAX_ITEMS = 3;
+    public const int MAX_ITEMS = 3;
 
     /**
      * @param Item[] $items

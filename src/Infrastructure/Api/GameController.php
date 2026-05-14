@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Api;
 
 use App\Application\Command\StartGameCommand;
+use App\Application\Query\GetSetupDataQuery;
+use App\Application\Query\GetSetupDataQueryHandler;
 use OpenApi\Attributes as OA;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,5 +47,15 @@ class GameController extends AbstractController
         }
 
         return $this->json(['status' => 'game started!']);
+    }
+
+    // TODO: separate controller?
+    #[Route('/api/games/setup-data', methods: [Request::METHOD_GET])]
+    #[OA\Get(summary: 'Get all available classes and items to build a Hero')]
+    public function getSetupData(GetSetupDataQueryHandler $handler): JsonResponse
+    {
+        $data = $handler->__invoke(new GetSetupDataQuery());
+
+        return $this->json($data);
     }
 }
