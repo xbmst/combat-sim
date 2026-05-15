@@ -25,7 +25,18 @@ class Battle
 
     public function execute(DamageCalculatorInterface $damageCalculator): void
     {
-        $result = $damageCalculator->calculateStrike($this->character, $this->opponent);
+        $this->strike($this->character, $this->opponent, $damageCalculator);
+
+        if ($this->isOpponentDead()) {
+            return;
+        }
+
+        $this->strike($this->opponent, $this->character, $damageCalculator);
+    }
+
+    private function strike(Warrior $attacker, Warrior $defender, DamageCalculatorInterface $damageCalculator): void
+    {
+        $result = $damageCalculator->calculateStrike($attacker, $defender);
 
         $this->roundLogs[] = $result->logs;
     }
@@ -55,12 +66,12 @@ class Battle
         return $this->roundLogs;
     }
 
-    public function setupNextBattle(Warrior $newOpponentStats): void
+    public function setupNextBattle(Warrior $newOpponent): void
     {
         // TODO: wrappers
         $this->currentRound++;
         $this->roundLogs = [];
-        $this->opponent = $newOpponentStats;
+        $this->opponent = $newOpponent;
     }
 
     public function isCharacterDead(): bool
