@@ -22,7 +22,7 @@ class GameControllerTest extends WebTestCase
     {
         $battleId = Uuid::v7()->toRfc4122();
         $playerId = Uuid::v7()->toRfc4122();
-        $heroClassId = 'MedievalNinja';
+        $characterClassId = 'MedievalNinja';
         $equippedItemsIds = [];
 
         $this->client->request(
@@ -32,7 +32,7 @@ class GameControllerTest extends WebTestCase
             content: json_encode([
                 'battleId' => $battleId,
                 'playerId' => $playerId,
-                'heroClassId' => $heroClassId,
+                'characterClassId' => $characterClassId,
                 'equippedItemsIds' => $equippedItemsIds,
                 'targetBattles' => 3,
             ], JSON_THROW_ON_ERROR)

@@ -7,6 +7,7 @@ namespace App\Infrastructure\Persistence\Redis;
 use App\Domain\Exception\BattleNotFoundException;
 use App\Domain\Model\Battle;
 use App\Domain\Model\Stats;
+use App\Domain\Model\Warrior;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use Redis;
 
@@ -22,27 +23,27 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
     public function save(Battle $battle): void
     {
-        $heroStats = $battle->getHeroStats();
-        $enemyStats = $battle->getEnemyStats();
+        $character = $battle->getCharacter();
+        $opponent = $battle->getOpponent();
 
         $data = [
             'battleId' => $battle->getBattleId(),
             'currentRound' => $battle->getCurrentRound(),
             'roundLogs' => $battle->getRoundLogs(),
             'targetBattles' => $battle->getTargetBattles(),
-            'hero' => [ // TODO: toArray()
-                'maxHp' => $heroStats->maxHp,
-                'currentHp' => $heroStats->currentHp,
-                'attack' => $heroStats->attack,
-                'defense' => $heroStats->defense,
-                'agility' => $heroStats->agility,
+            'character' => [ // TODO: toArray()
+                'maxHp' => $character->stats->maxHp,
+                'currentHp' => $character->stats->currentHp,
+                'attack' => $character->stats->attack,
+                'defense' => $character->stats->defense,
+                'agility' => $character->stats->agility,
             ],
-            'enemy' => [
-                'maxHp' => $enemyStats->maxHp,
-                'currentHp' => $enemyStats->currentHp,
-                'attack' => $enemyStats->attack,
-                'defense' => $enemyStats->defense,
-                'agility' => $enemyStats->agility,
+            'opponent' => [
+                'maxHp' => $opponent->stats->maxHp,
+                'currentHp' => $opponent->stats->currentHp,
+                'attack' => $opponent->stats->attack,
+                'defense' => $opponent->stats->defense,
+                'agility' => $opponent->stats->agility,
             ],
         ];
 
@@ -62,26 +63,26 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         // TODO: fromArray()
-        $heroStats = new Stats(
-            $data['hero']['maxHp'],
-            $data['hero']['currentHp'],
-            $data['hero']['attack'],
-            $data['hero']['defense'],
-            $data['hero']['agility'],
-        );
+        $character = new Warrior(new Stats(
+            $data['character']['maxHp'],
+            $data['character']['currentHp'],
+            $data['character']['attack'],
+            $data['character']['defense'],
+            $data['character']['agility'],
+        ));
 
-        $enemyStats = new Stats(
-            $data['enemy']['maxHp'],
-            $data['enemy']['currentHp'],
-            $data['enemy']['attack'],
-            $data['enemy']['defense'],
-            $data['enemy']['agility'],
-        );
+        $opponent = new Warrior(new Stats(
+            $data['opponent']['maxHp'],
+            $data['opponent']['currentHp'],
+            $data['opponent']['attack'],
+            $data['opponent']['defense'],
+            $data['opponent']['agility'],
+        ));
 
         return new Battle(
             $battleId,
-            $heroStats,
-            $enemyStats,
+            $character,
+            $opponent,
             $data['targetBattles'],
             $data['currentRound'],
             $data['roundLogs'],

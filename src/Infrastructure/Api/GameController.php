@@ -51,7 +51,7 @@ class GameController extends AbstractController
 
     // TODO: separate controller?
     #[Route('/api/games/setup-data', methods: [Request::METHOD_GET])]
-    #[OA\Get(summary: 'Get all available classes and items to build a Hero')]
+    #[OA\Get(summary: 'Get all available classes and items to build a Character')]
     public function getSetupData(GetSetupDataQueryHandler $handler): JsonResponse
     {
         $data = $handler->__invoke(new GetSetupDataQuery());

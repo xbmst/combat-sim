@@ -6,9 +6,9 @@ namespace App\Domain\Exception;
 
 use Exception;
 
-class HeroClassNotFoundException extends Exception
+class CharacterClassNotFoundException extends Exception
 {
-    public function __construct(string $message = 'Hero Class not found')
+    public function __construct(string $message = 'Character Class not found')
     {
         parent::__construct($message, 404);
     }

@@ -6,10 +6,11 @@ namespace App\Application\Command;
 
 use App\Domain\Model\Battle;
 use App\Domain\Model\Stats;
+use App\Domain\Model\Warrior;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use App\Domain\Port\GameConfigRepositoryInterface;
 use App\Domain\ValueObject\GameLengthSettings;
-use App\Domain\ValueObject\HeroLoadout;
+use App\Domain\ValueObject\CharacterLoadout;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -25,18 +26,18 @@ readonly class StartGameCommandHandler
     {
         $settings = new GameLengthSettings($command->targetBattles);
 
-        $heroClass = $this->configRepository->getClassByName($command->heroClassId);
+        $characterClass = $this->configRepository->getClassByName($command->characterClassId);
         $items = $this->configRepository->getItemsByIds($command->equippedItemsIds);
 
-        $heroLoadout = new HeroLoadout($heroClass, $items);
+        $characterLoadout = new CharacterLoadout($characterClass, $items);
 
-        $heroStats = Stats::buildFromClassAndItems($heroLoadout->gameClass, $heroLoadout->items);
-        $enemyStats = Stats::buildFromClassAndItems($this->configRepository->getRandomEnemyClass(), []);
+        $character = new Warrior(Stats::buildFromClassAndItems($characterLoadout->gameClass, $characterLoadout->items));
+        $opponent = new Warrior(Stats::buildFromClassAndItems($this->configRepository->getRandomOpponentClass(), []));
 
         $battle = new Battle(
             $command->battleId,
-            $heroStats,
-            $enemyStats,
+            $character,
+            $opponent,
             $settings->targetBattles
         );
 

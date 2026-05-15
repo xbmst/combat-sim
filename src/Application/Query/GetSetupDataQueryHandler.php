@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Query;
 
-use App\Domain\ValueObject\HeroLoadout;
+use App\Domain\ValueObject\CharacterLoadout;
 use Doctrine\DBAL\Connection;
 
 class GetSetupDataQueryHandler
@@ -27,7 +27,7 @@ class GetSetupDataQueryHandler
             $classes,
             $items,
             [
-                'max_items' => HeroLoadout::MAX_ITEMS,
+                'max_items' => CharacterLoadout::MAX_ITEMS,
             ]
         );
     }

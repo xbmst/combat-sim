@@ -6,7 +6,7 @@ namespace App\Domain\ValueObject;
 
 use App\Domain\Exception\InvalidLoadoutException;
 
-readonly class HeroLoadout
+readonly class CharacterLoadout
 {
     public const int MAX_ITEMS = 3;
 

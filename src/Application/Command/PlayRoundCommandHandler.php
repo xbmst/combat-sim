@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Command;
 
 use App\Domain\Model\Stats;
+use App\Domain\Model\Warrior;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use App\Domain\Port\GameConfigRepositoryInterface;
 use App\Domain\Service\DamageCalculatorInterface;
@@ -27,7 +28,7 @@ readonly class PlayRoundCommandHandler
 
         $battle->execute($this->damageCalculator);
 
-        if ($battle->isHeroDead()) {
+        if ($battle->isCharacterDead()) {
             $this->battleRepository->delete($battle->getBattleId());
             // TODO: $this->eventBus->dispatch(new GameLostEvent(...)); save to sql
             return;
@@ -39,11 +40,10 @@ readonly class PlayRoundCommandHandler
             return;
         }
 
-        if ($battle->isEnemyDead()) {
-            $newEnemyClass = $this->configRepository->getRandomEnemyClass();
-            $newEnemyStats = Stats::buildFromClassAndItems($newEnemyClass, []);
+        if ($battle->isOpponentDead()) {
+            $newOpponent = new Warrior(Stats::buildFromClassAndItems($this->configRepository->getRandomOpponentClass(), []));
 
-            $battle->setupNextBattle($newEnemyStats);
+            $battle->setupNextBattle($newOpponent);
         }
 
         $this->battleRepository->save($battle);

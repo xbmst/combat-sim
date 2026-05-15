@@ -23,7 +23,7 @@ class RoundControllerTest extends WebTestCase
     {
         $battleId = Uuid::v7()->toRfc4122();
         $playerId = Uuid::v7()->toRfc4122();
-        $heroClassId = 'MedievalNinja';
+        $characterClassId = 'MedievalNinja';
         $equippedItemsIds = [];
 
         $opponentsCount = 5;
@@ -34,7 +34,7 @@ class RoundControllerTest extends WebTestCase
             content: json_encode([
                 'battleId' => $battleId,
                 'playerId' => $playerId,
-                'heroClassId' => $heroClassId,
+                'characterClassId' => $characterClassId,
                 'equippedItemsIds' => $equippedItemsIds,
                 'targetBattles' => $opponentsCount,
             ], JSON_THROW_ON_ERROR)
