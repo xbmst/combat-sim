@@ -27,10 +27,24 @@ readonly class PlayRoundCommandHandler
 
         $battle->execute($this->damageCalculator);
 
-        $newEnemyClass = $this->configRepository->getRandomEnemyClass();
-        $newEnemyStats = Stats::buildFromClassAndItems($newEnemyClass, []);
+        if ($battle->isHeroDead()) {
+            $this->battleRepository->delete($battle->getBattleId());
+            // TODO: $this->eventBus->dispatch(new GameLostEvent(...)); save to sql
+            return;
+        }
 
-        $battle->setupNextBattle($newEnemyStats);
+        if ($battle->isAllRoundsComplete()) {
+            $this->battleRepository->delete($battle->getBattleId());
+            // TODO: $this->eventBus->dispatch(new GameWonEvent(...));
+            return;
+        }
+
+        if ($battle->isEnemyDead()) {
+            $newEnemyClass = $this->configRepository->getRandomEnemyClass();
+            $newEnemyStats = Stats::buildFromClassAndItems($newEnemyClass, []);
+
+            $battle->setupNextBattle($newEnemyStats);
+        }
 
         $this->battleRepository->save($battle);
     }

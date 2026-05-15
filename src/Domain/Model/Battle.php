@@ -62,4 +62,20 @@ class Battle
         $this->roundLogs = [];
         $this->enemyStats = $newEnemyStats;
     }
+
+    public function isHeroDead(): bool
+    {
+        return $this->heroStats->currentHp <= 0;
+    }
+
+    public function isEnemyDead(): bool
+    {
+        return $this->enemyStats->currentHp <= 0;
+    }
+
+    public function isAllRoundsComplete(): bool
+    {
+        return $this->isEnemyDead()
+            && ($this->currentRound >= $this->targetBattles);
+    }
 }
