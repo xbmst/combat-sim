@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Model;
 
+use App\Domain\Service\DamageCalculatorInterface;
+
 class Battle
 {
     public function __construct(
@@ -21,12 +23,11 @@ class Battle
         return $this->targetBattles;
     }
 
-    public function execute(): void
+    public function execute(DamageCalculatorInterface $damageCalculator): void
     {
-        $damage = max(0, $this->heroStats->attack - $this->enemyStats->defense); // TODO: damage calculator service
-        $this->enemyStats = $this->enemyStats->takeDamage($damage);
+        $result = $damageCalculator->calculateStrike($this->heroStats, $this->enemyStats);
 
-        $this->roundLogs[] = "Hero hit Enemy for $damage damage!";
+        $this->roundLogs[] = $result->logs;
     }
 
     public function getBattleId(): string
