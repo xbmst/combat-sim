@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Model;
 
 use App\Domain\Pipeline\StrikeModifierInterface;
+use App\Domain\ValueObject\StrikeContext;
 
 class Warrior
 {
@@ -15,10 +16,10 @@ class Warrior
     ) {
     }
 
-    public function takeDamage(int $amount): self
+    public function takeDamage(StrikeContext $context): self
     {
         return new self(
-            $this->stats->takeDamage($amount),
+            $this->stats->takeDamage($context->damageAmount),
             $this->strikeModifiers,
         );
     }

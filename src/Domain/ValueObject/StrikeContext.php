@@ -7,12 +7,16 @@ namespace App\Domain\ValueObject;
 class StrikeContext
 {
     public function __construct(
-        private array $logs = [],
+        public int $damageAmount,
+        public array $logs = [] {
+            get => $this->logs;
+            set(array $v) => $this->logs[] = $v;
+        },
     ) {
     }
 
     public function addLog(string $message): void
     {
-        $this->logs[] = $message;
+        $this->logs = array_merge($this->logs, [$message]);
     }
 }
