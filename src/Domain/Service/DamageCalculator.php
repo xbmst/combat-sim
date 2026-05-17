@@ -20,10 +20,10 @@ class DamageCalculator implements DamageCalculatorInterface
 
     public function calculateStrike(Warrior $attacker, Warrior $defender): StrikeResult
     {
-        $context = new StrikeContext($attacker->stats->attack);
+        $context = new StrikeContext($attacker, $defender, $attacker->stats->attack);
 
         foreach ($this->pipeline as $modifier) {
-            $modifier->apply($context);
+            $context = $modifier->apply($context);
         }
 
         $defender->takeDamage($context);

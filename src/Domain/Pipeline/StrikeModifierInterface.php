@@ -8,5 +8,5 @@ use App\Domain\ValueObject\StrikeContext;
 
 interface StrikeModifierInterface
 {
-    public function apply(StrikeContext $context): void;
+    public function apply(StrikeContext $context): StrikeContext;
 }

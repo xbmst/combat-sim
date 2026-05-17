@@ -9,7 +9,13 @@ use App\Domain\ValueObject\StrikeContext;
 
 class BaseDefenseModifier implements StrikeModifierInterface
 {
-    public function apply(StrikeContext $context): void
+    public function apply(StrikeContext $context): StrikeContext
     {
+        return $context->withDamage($this->calculateDamage($context));
+    }
+
+    private function calculateDamage(StrikeContext $context): int
+    {
+        return $context->damageAmount - $context->defender->stats->defense;
     }
 }

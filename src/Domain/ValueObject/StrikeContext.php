@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace App\Domain\ValueObject;
 
-class StrikeContext
+use App\Domain\Model\Warrior;
+
+readonly class StrikeContext
 {
     public function __construct(
+        public Warrior $attacker,
+        public Warrior $defender,
         public int $damageAmount,
-        public array $logs = [] {
-            get => $this->logs;
-            set(array $v) => $this->logs[] = $v;
-        },
+        public array $logs = [],
     ) {
     }
 
-    public function addLog(string $message): void
+    public function withLog(string $message): self
     {
-        $this->logs = array_merge($this->logs, [$message]);
+        return new self($this->attacker, $this->defender, $this->damageAmount, array_merge($this->logs, [$message]));
+    }
+
+    public function withDamage(int $damage): self
+    {
+        return new self($this->attacker, $this->defender, $damage, $this->logs);
     }
 }
