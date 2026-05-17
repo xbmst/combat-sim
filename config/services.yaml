@@ -29,7 +29,9 @@ services:
     App\Domain\Port\ActiveBattleRepositoryInterface:
         alias: App\Infrastructure\Persistence\Redis\RedisBattleRepository
 
+    App\Domain\Pipeline\Modifier\BaseDefenseModifier: ~
+
     App\Domain\Service\DamageCalculator:
         arguments:
             $pipeline:
-                []
+                - '@App\Domain\Pipeline\Modifier\BaseDefenseModifier'
