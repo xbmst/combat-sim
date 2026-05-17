@@ -9,12 +9,12 @@ use App\Domain\Pipeline\StrikeModifierInterface;
 use App\Domain\ValueObject\StrikeContext;
 use App\Domain\ValueObject\StrikeResult;
 
-class DamageCalculator implements DamageCalculatorInterface
+readonly class DamageCalculator implements DamageCalculatorInterface
 {
     /**
      * @param StrikeModifierInterface[] $pipeline
      */
-    public function __construct(private readonly array $pipeline)
+    public function __construct(private array $pipeline)
     {
     }
 
@@ -27,6 +27,8 @@ class DamageCalculator implements DamageCalculatorInterface
         }
 
         $defender->takeDamage($context);
+
+        $context = $context->withLog(sprintf('%s hits %s for %d damage.', $attacker->name, $defender->name, $context->damageAmount));
 
         return new StrikeResult($context->logs);
     }

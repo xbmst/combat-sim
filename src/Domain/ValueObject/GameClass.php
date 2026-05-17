@@ -8,6 +8,7 @@ class GameClass
 {
     public function __construct(
         public string $id,
+        public string $name,
         public int $baseHp,
         public int $baseAttack,
         public int $baseDefense,

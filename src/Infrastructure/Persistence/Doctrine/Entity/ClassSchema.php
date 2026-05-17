@@ -21,7 +21,7 @@ class ClassSchema
             get => $this->id;
         },
         #[ORM\Column(type: Types::STRING)]
-        private string $name {
+        public string $name {
             get => $this->name;
             set(string $v) {
                 $this->name = $v;

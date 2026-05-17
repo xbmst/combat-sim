@@ -37,6 +37,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
                 'attack' => $character->stats->attack,
                 'defense' => $character->stats->defense,
                 'agility' => $character->stats->agility,
+                'name' => $character->name,
             ],
             'opponent' => [
                 'maxHp' => $opponent->stats->maxHp,
@@ -44,6 +45,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
                 'attack' => $opponent->stats->attack,
                 'defense' => $opponent->stats->defense,
                 'agility' => $opponent->stats->agility,
+                'name' => $opponent->name,
             ],
         ];
 
@@ -63,7 +65,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         // TODO: fromArray()
-        $character = new Warrior(new Stats(
+        $character = new Warrior($data['character']['name'], new Stats(
             $data['character']['maxHp'],
             $data['character']['currentHp'],
             $data['character']['attack'],
@@ -71,7 +73,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
             $data['character']['agility'],
         ));
 
-        $opponent = new Warrior(new Stats(
+        $opponent = new Warrior($data['character']['name'], new Stats(
             $data['opponent']['maxHp'],
             $data['opponent']['currentHp'],
             $data['opponent']['attack'],

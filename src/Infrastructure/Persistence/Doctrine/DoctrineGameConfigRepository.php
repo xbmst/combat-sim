@@ -12,9 +12,9 @@ use App\Infrastructure\Persistence\Doctrine\Entity\ClassSchema;
 use App\Infrastructure\Persistence\Doctrine\Entity\ItemSchema;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
+readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
     }
 
@@ -28,6 +28,7 @@ class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
 
         return new GameClass(
             $classSchema->getId(),
+            $classSchema->getName(),
             $classSchema->getBaseHp(),
             $classSchema->getBaseAttack(),
             $classSchema->getBaseDefense(),
@@ -46,6 +47,7 @@ class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
 
         return new GameClass(
             $classSchema->id,
+            $classSchema->name,
             $classSchema->baseHp,
             $classSchema->baseAttack,
             $classSchema->baseDefense,
@@ -85,6 +87,7 @@ class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
 
         return new GameClass(
             $classSchema->id,
+            $classSchema->name,
             $classSchema->baseHp,
             $classSchema->baseAttack,
             $classSchema->baseDefense,

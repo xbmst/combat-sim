@@ -31,8 +31,10 @@ readonly class StartGameCommandHandler
 
         $characterLoadout = new CharacterLoadout($characterClass, $items);
 
-        $character = new Warrior(Stats::buildFromClassAndItems($characterLoadout->gameClass, $characterLoadout->items));
-        $opponent = new Warrior(Stats::buildFromClassAndItems($this->configRepository->getRandomOpponentClass(), []));
+        $character = new Warrior($characterLoadout->gameClass->name, Stats::buildFromClassAndItems($characterLoadout->gameClass, $characterLoadout->items));
+
+        $opponentClass = $this->configRepository->getRandomOpponentClass();
+        $opponent = new Warrior($opponentClass->name, Stats::buildFromClassAndItems($opponentClass, []));
 
         $battle = new Battle(
             $command->battleId,

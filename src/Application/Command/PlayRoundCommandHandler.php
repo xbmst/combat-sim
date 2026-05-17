@@ -41,7 +41,8 @@ readonly class PlayRoundCommandHandler
         }
 
         if ($battle->isOpponentDead()) {
-            $newOpponent = new Warrior(Stats::buildFromClassAndItems($this->configRepository->getRandomOpponentClass(), []));
+            $newOpponentClass = $this->configRepository->getRandomOpponentClass();
+            $newOpponent = new Warrior($newOpponentClass->name, Stats::buildFromClassAndItems($newOpponentClass, []));
 
             $battle->setupNextBattle($newOpponent);
         }

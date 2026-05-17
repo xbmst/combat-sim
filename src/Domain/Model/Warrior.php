@@ -9,6 +9,7 @@ use App\Domain\ValueObject\StrikeContext;
 class Warrior
 {
     public function __construct(
+        public string $name,
         public Stats $stats,
     ) {
     }
@@ -16,6 +17,7 @@ class Warrior
     public function takeDamage(StrikeContext $context): self
     {
         return new self(
+            $this->name,
             $this->stats->takeDamage($context->damageAmount),
         );
     }
