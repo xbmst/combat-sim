@@ -28,3 +28,8 @@ services:
 
     App\Domain\Port\ActiveBattleRepositoryInterface:
         alias: App\Infrastructure\Persistence\Redis\RedisBattleRepository
+
+    App\Domain\Service\DamageCalculator:
+        arguments:
+            $pipeline:
+                []
