@@ -79,7 +79,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
     public function getRandomOpponentClass(): GameClass
     {
         $classSchemas = $this->em->getRepository(ClassSchema::class)->findAll();
-        $classSchema = $classSchemas[0];
+        $classSchema = $classSchemas[random_int(0, count($classSchemas) - 1)];
 
         if (!$classSchema) {
             throw new CharacterClassNotFoundException('Opponent class not found');
