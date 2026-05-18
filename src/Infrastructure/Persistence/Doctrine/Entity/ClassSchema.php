@@ -14,10 +14,8 @@ class ClassSchema
     public function __construct(
         #[ORM\Id]
         #[ORM\Column(type: Types::GUID)]
+        #[ORM\GeneratedValue]
         public string $id {
-            set(string $v) {
-                $this->id = $v;
-            }
             get => $this->id;
         },
         #[ORM\Column(type: Types::STRING)]

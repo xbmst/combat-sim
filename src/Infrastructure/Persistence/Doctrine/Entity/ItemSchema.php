@@ -14,6 +14,7 @@ class ItemSchema
     public function __construct(
         #[ORM\Id]
         #[ORM\Column(type: Types::GUID)]
+        #[ORM\GeneratedValue]
         public string $id {
             get => $this->id;
         },
@@ -51,8 +52,9 @@ class ItemSchema
             set(int $v) {
                 $this->modifierAgility = $v;
             }
-        }
+        },
+        #[ORM\Column(type: Types::STRING)]
+        public string $category,
     ) {
     }
-
 }

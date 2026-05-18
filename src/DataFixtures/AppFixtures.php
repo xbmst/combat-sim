@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Domain\ValueObject\ItemCategory;
 use App\Infrastructure\Persistence\Doctrine\Entity\ClassSchema;
 use App\Infrastructure\Persistence\Doctrine\Entity\ItemSchema;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -61,6 +62,7 @@ class AppFixtures extends Fixture
             random_int(1, 10),
             random_int(1, 10),
             random_int(1, 10),
+            ItemCategory::cases()[random_int(0, count(ItemCategory::cases()))]->value
         );
     }
 }

@@ -71,9 +71,10 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
             return new Item(
                 $schema->id,
                 $schema->name,
+                $schema->category,
                 $schema->modifierAttack,
                 $schema->modifierDefense,
-                $schema->modifierAgility
+                $schema->modifierAgility,
             );
         }, $schemas);
     }
@@ -115,6 +116,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
             return new Item(
                 $schema->id,
                 $schema->name,
+                $schema->category,
                 $schema->modifierAttack,
                 $schema->modifierDefense,
                 $schema->modifierAgility
