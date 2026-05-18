@@ -7,7 +7,7 @@ namespace App\Domain\Pipeline\Modifier;
 use App\Domain\Pipeline\StrikeModifierInterface;
 use App\Domain\ValueObject\StrikeContext;
 
-class BaseDefenseModifier implements StrikeModifierInterface
+class BaseStrikeModifier implements StrikeModifierInterface
 {
     public function apply(StrikeContext $context): StrikeContext
     {
@@ -16,6 +16,15 @@ class BaseDefenseModifier implements StrikeModifierInterface
 
     private function calculateDamage(StrikeContext $context): int
     {
-        return $context->damageAmount - $context->defender->stats->defense;
+        $totalAttack = $context->attacker->stats->attack;
+        $totalDefense = $context->defender->stats->defense;
+
+        $rawDamage = $totalAttack - $totalDefense;
+
+        $finalDamage = max(0, $rawDamage);
+
+        $context->withLog(sprintf('[Math: %d attack vs %d defense]', $totalAttack, $totalDefense));
+
+        return $finalDamage;
     }
 }

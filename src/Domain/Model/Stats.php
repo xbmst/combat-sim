@@ -29,24 +29,15 @@ class Stats
         );
     }
 
-    /**
-     * @param Item[] $items
-     */
-    public static function buildFromClassAndItems(GameClass $class, array $items): self
+    public static function buildFromClass(GameClass $class): self
     {
-        $hp = $class->baseHp;
-        $attack = $class->baseAttack;
-        $defense = $class->baseDefense;
-        $agility = $class->baseAgility;
-
-        foreach ($items as $item) {
-            $hp += $item->modifierHp;
-            $attack += $item->modifierAttack;
-            $defense += $item->modifierDefense;
-            $agility += $item->modifierAgility;
-        }
-
-        return new self($hp, $hp, $attack, $defense, $agility);
+        return new self(
+            $class->baseHp,
+            $class->baseHp,
+            $class->baseAttack,
+            $class->baseDefense,
+            $class->baseAgility,
+        );
     }
 
     public function resetHealth(): self
@@ -57,6 +48,17 @@ class Stats
             $this->attack,
             $this->defense,
             $this->agility
+        );
+    }
+
+    public function increase(int $attack, int $defense, int $agility, int $maxHp = 0): self
+    {
+        return new self(
+            $this->maxHp + $maxHp,
+            $this->currentHp,
+            $this->attack + $attack,
+            $this->defense + $defense,
+            $this->agility + $agility
         );
     }
 }

@@ -7,10 +7,11 @@ namespace App\Domain\ValueObject;
 class Item
 {
     public function __construct(
-        public int $modifierHp,
-        public int $modifierAttack,
-        public int $modifierDefense,
-        public int $modifierAgility,
+        public string $id,
+        public string $name,
+        public int $modifierAttack = 0,
+        public int $modifierDefense = 0,
+        public int $modifierAgility = 0,
     ) {
     }
 }

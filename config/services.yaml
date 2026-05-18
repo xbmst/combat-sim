@@ -29,9 +29,13 @@ services:
     App\Domain\Port\ActiveBattleRepositoryInterface:
         alias: App\Infrastructure\Persistence\Redis\RedisBattleRepository
 
-    App\Domain\Pipeline\Modifier\BaseDefenseModifier: ~
+    App\Domain\Pipeline\Modifier\BaseStrikeModifier: ~
+    App\Domain\Pipeline\Modifier\AttackerItemStatsModifier: ~
+    App\Domain\Pipeline\Modifier\DefenderItemStatsModifier: ~
 
     App\Domain\Service\DamageCalculator:
         arguments:
             $pipeline:
-                - '@App\Domain\Pipeline\Modifier\BaseDefenseModifier'
+                - '@App\Domain\Pipeline\Modifier\AttackerItemStatsModifier'
+                - '@App\Domain\Pipeline\Modifier\DefenderItemStatsModifier'
+                - '@App\Domain\Pipeline\Modifier\BaseStrikeModifier'
