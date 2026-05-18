@@ -48,4 +48,15 @@ class Stats
 
         return new self($hp, $hp, $attack, $defense, $agility);
     }
+
+    public function resetHealth(): self
+    {
+        return new self(
+            $this->maxHp,
+            $this->maxHp,
+            $this->attack,
+            $this->defense,
+            $this->agility
+        );
+    }
 }

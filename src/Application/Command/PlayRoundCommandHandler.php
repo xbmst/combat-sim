@@ -9,6 +9,8 @@ use App\Domain\Model\Warrior;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use App\Domain\Port\GameConfigRepositoryInterface;
 use App\Domain\Service\DamageCalculatorInterface;
+use App\Domain\Service\DiceRollerInterface;
+use App\Domain\Service\TurnPickerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -19,6 +21,8 @@ readonly class PlayRoundCommandHandler
         private ActiveBattleRepositoryInterface $battleRepository,
         private GameConfigRepositoryInterface $configRepository,
         private DamageCalculatorInterface $damageCalculator,
+        private DiceRollerInterface $diceRoller,
+        private TurnPickerInterface $turnPicker,
     ) {
     }
 
@@ -26,7 +30,7 @@ readonly class PlayRoundCommandHandler
     {
         $battle = $this->battleRepository->findById($command->battleId);
 
-        $battle->execute($this->damageCalculator);
+        $battle->execute($this->damageCalculator, $this->diceRoller, $this->turnPicker);
 
         if ($battle->isCharacterDead()) {
             $this->battleRepository->delete($battle->getBattleId());

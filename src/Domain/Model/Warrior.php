@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Model;
 
-use App\Domain\ValueObject\StrikeContext;
-
 class Warrior
 {
     public function __construct(
@@ -14,11 +12,19 @@ class Warrior
     ) {
     }
 
-    public function takeDamage(StrikeContext $context): self
+    public function takeDamage(int $amount): self
     {
         return new self(
             $this->name,
-            $this->stats->takeDamage($context->damageAmount),
+            $this->stats->takeDamage($amount),
+        );
+    }
+
+    public function resetHealth(): self
+    {
+        return new self(
+            $this->name,
+            $this->stats->resetHealth(),
         );
     }
 }

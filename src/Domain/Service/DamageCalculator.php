@@ -26,10 +26,6 @@ readonly class DamageCalculator implements DamageCalculatorInterface
             $context = $modifier->apply($context);
         }
 
-        $defender->takeDamage($context);
-
-        $context = $context->withLog(sprintf('%s hits %s for %d damage.', $attacker->name, $defender->name, $context->damageAmount));
-
-        return new StrikeResult($context->logs);
+        return new StrikeResult($context->damageAmount, $context->logs);
     }
 }

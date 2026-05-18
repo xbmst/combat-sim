@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Model;
 
 use App\Domain\Service\DamageCalculatorInterface;
+use App\Domain\Service\DiceRollerInterface;
+use App\Domain\Service\TurnPickerInterface;
 
 class Battle
 {
@@ -23,22 +25,30 @@ class Battle
         return $this->targetBattles;
     }
 
-    public function execute(DamageCalculatorInterface $damageCalculator): void
+    public function execute(DamageCalculatorInterface $damageCalculator, DiceRollerInterface $dice, TurnPickerInterface $turnPicker): void
     {
-        $this->strike($this->character, $this->opponent, $damageCalculator);
+        // TODO: refactor to pipeline?
+        [$attacker, $defender] = $turnPicker->pick($this->character, $this->opponent);
 
-        if ($this->isOpponentDead()) {
-            return;
+        if (!$this->isAttackDodged($dice, $defender)) {
+            $this->strike($attacker, $defender, $damageCalculator);
+
+            if ($this->isOpponentDead()) {
+                return;
+            }
         }
 
-        $this->strike($this->opponent, $this->character, $damageCalculator);
+        $this->strike($defender, $attacker, $damageCalculator);
     }
 
     private function strike(Warrior $attacker, Warrior $defender, DamageCalculatorInterface $damageCalculator): void
     {
         $result = $damageCalculator->calculateStrike($attacker, $defender);
-
         $this->roundLogs[] = $result->logs;
+
+        $defender->stats = ($defender->takeDamage($result->damageToDeal))->stats;
+
+        $this->roundLogs[] = sprintf('%s hits %s for %d damage.', $attacker->name, $defender->name, $result->damageToDeal);
     }
 
     public function getBattleId(): string
@@ -72,6 +82,9 @@ class Battle
         $this->currentRound++;
         $this->roundLogs = [];
         $this->opponent = $newOpponent;
+
+        $this->character->resetHealth();
+        $this->roundLogs[] = 'Character Health has been healed';
     }
 
     public function isCharacterDead(): bool
@@ -88,5 +101,10 @@ class Battle
     {
         return $this->isOpponentDead()
             && ($this->currentRound >= $this->targetBattles);
+    }
+
+    public function isAttackDodged(DiceRollerInterface $dice, Warrior $defender): bool
+    {
+        return $dice->roll() <= $defender->stats->agility;
     }
 }
