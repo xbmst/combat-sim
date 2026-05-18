@@ -9,6 +9,7 @@ use App\Domain\Model\Stats;
 use App\Domain\Model\Warrior;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use App\Domain\Port\GameConfigRepositoryInterface;
+use App\Domain\Service\OpponentBuilder;
 use App\Domain\ValueObject\GameLengthSettings;
 use App\Domain\ValueObject\CharacterLoadout;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -19,6 +20,7 @@ readonly class StartGameCommandHandler
     public function __construct(
         private GameConfigRepositoryInterface $configRepository,
         private ActiveBattleRepositoryInterface $activeBattleRepository,
+        private OpponentBuilder $opponentBuilder,
     ) {
     }
 
@@ -31,15 +33,12 @@ readonly class StartGameCommandHandler
 
         $characterLoadout = new CharacterLoadout($characterClass, $items);
 
-        $character = new Warrior($characterLoadout->gameClass->name, Stats::buildFromClassAndItems($characterLoadout->gameClass, $characterLoadout->items));
-
-        $opponentClass = $this->configRepository->getRandomOpponentClass();
-        $opponent = new Warrior($opponentClass->name, Stats::buildFromClassAndItems($opponentClass, []));
+        $character = new Warrior($characterLoadout->gameClass->name, Stats::buildFromClass($characterLoadout->gameClass), $characterLoadout->items);
 
         $battle = new Battle(
             $command->battleId,
             $character,
-            $opponent,
+            $this->opponentBuilder->build(),
             $settings->targetBattles
         );
 

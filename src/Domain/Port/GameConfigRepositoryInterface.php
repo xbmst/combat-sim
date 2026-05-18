@@ -19,4 +19,9 @@ interface GameConfigRepositoryInterface
     public function getRandomOpponentClass(): GameClass;
 
     public function getClassByName(string $name): GameClass;
+
+    /**
+     * @return Item[]
+     */
+    public function getRandomItems(int $limit): array;
 }

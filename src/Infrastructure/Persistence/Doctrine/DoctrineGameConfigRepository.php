@@ -68,7 +68,8 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
 
         return array_map(static function (ItemSchema $schema) {
             return new Item(
-                $schema->modifierHp,
+                $schema->id,
+                $schema->name,
                 $schema->modifierAttack,
                 $schema->modifierDefense,
                 $schema->modifierAgility
@@ -93,5 +94,26 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
             $classSchema->baseDefense,
             $classSchema->baseAgility,
         );
+    }
+
+    public function getRandomItems(int $limit): array
+    {
+        $qb = $this->em->createQueryBuilder();
+
+        $schemas = $qb->select('i')
+            ->from(ItemSchema::class, 'i')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        return array_map(static function (ItemSchema $schema) {
+            return new Item(
+                $schema->id,
+                $schema->name,
+                $schema->modifierAttack,
+                $schema->modifierDefense,
+                $schema->modifierAgility
+            );
+        }, $schemas);
     }
 }

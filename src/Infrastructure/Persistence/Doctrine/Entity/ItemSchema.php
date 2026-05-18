@@ -17,6 +17,12 @@ class ItemSchema
         public string $id {
             get => $this->id;
         },
+        public string $name {
+            get => $this->name;
+            set(string $v) {
+                $this->name = $v;
+            }
+        },
         #[ORM\Column(type: Types::INTEGER)]
         public int $modifierHp {
             get => $this->modifierHp;

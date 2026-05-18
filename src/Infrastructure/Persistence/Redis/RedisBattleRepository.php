@@ -38,6 +38,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
                 'defense' => $character->stats->defense,
                 'agility' => $character->stats->agility,
                 'name' => $character->name,
+                'items' => $character->items,
             ],
             'opponent' => [
                 'maxHp' => $opponent->stats->maxHp,
@@ -46,6 +47,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
                 'defense' => $opponent->stats->defense,
                 'agility' => $opponent->stats->agility,
                 'name' => $opponent->name,
+                'items' => $opponent->items,
             ],
         ];
 
@@ -65,21 +67,28 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
         // TODO: fromArray()
-        $character = new Warrior($data['character']['name'], new Stats(
-            $data['character']['maxHp'],
-            $data['character']['currentHp'],
-            $data['character']['attack'],
-            $data['character']['defense'],
-            $data['character']['agility'],
-        ));
+        $character = new Warrior(
+            $data['character']['name'],
+            new Stats(
+                $data['character']['maxHp'],
+                $data['character']['currentHp'],
+                $data['character']['attack'],
+                $data['character']['defense'],
+                $data['character']['agility'],
+            ),
+            $data['character']['items'],
+        );
 
-        $opponent = new Warrior($data['character']['name'], new Stats(
-            $data['opponent']['maxHp'],
-            $data['opponent']['currentHp'],
-            $data['opponent']['attack'],
-            $data['opponent']['defense'],
-            $data['opponent']['agility'],
-        ));
+        $opponent = new Warrior($data['character']['name'],
+            new Stats(
+                $data['opponent']['maxHp'],
+                $data['opponent']['currentHp'],
+                $data['opponent']['attack'],
+                $data['opponent']['defense'],
+                $data['opponent']['agility'],
+            ),
+            $data['opponent']['items'],
+        );
 
         return new Battle(
             $battleId,

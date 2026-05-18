@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Command;
 
-use App\Domain\Model\Stats;
-use App\Domain\Model\Warrior;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
-use App\Domain\Port\GameConfigRepositoryInterface;
 use App\Domain\Service\DamageCalculatorInterface;
 use App\Domain\Service\DiceRollerInterface;
+use App\Domain\Service\OpponentBuilder;
 use App\Domain\Service\TurnPickerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -19,10 +17,10 @@ readonly class PlayRoundCommandHandler
 
     public function __construct(
         private ActiveBattleRepositoryInterface $battleRepository,
-        private GameConfigRepositoryInterface $configRepository,
         private DamageCalculatorInterface $damageCalculator,
         private DiceRollerInterface $diceRoller,
         private TurnPickerInterface $turnPicker,
+        private OpponentBuilder $opponentBuilder,
     ) {
     }
 
@@ -45,10 +43,7 @@ readonly class PlayRoundCommandHandler
         }
 
         if ($battle->isOpponentDead()) {
-            $newOpponentClass = $this->configRepository->getRandomOpponentClass();
-            $newOpponent = new Warrior($newOpponentClass->name, Stats::buildFromClassAndItems($newOpponentClass, []));
-
-            $battle->setupNextBattle($newOpponent);
+            $battle->setupNextBattle($this->opponentBuilder->build());
         }
 
         $this->battleRepository->save($battle);
