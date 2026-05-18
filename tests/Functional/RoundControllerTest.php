@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\Domain\ValueObject\BattleStatus;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,13 +43,24 @@ class RoundControllerTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
 
-        for ($i = 0; $i < $opponentsCount; ++$i) {
+        do {
             $this->client->request(
                 'POST',
                 "/api/battles/$battleId/next-round",
             );
 
             self::assertResponseStatusCodeSame(Response::HTTP_OK);
-        }
+
+            $responseContent = $this->client->getResponse()->getContent();
+            $decoded = json_decode($responseContent, true, 512, JSON_THROW_ON_ERROR);
+
+            self::assertIsArray($decoded);
+            self::assertArrayHasKey('status', $decoded);
+
+        } while (
+            $decoded['status'] !== BattleStatus::BATTLE_WON
+            || $decoded['status'] !== BattleStatus::GAME_WON
+            || $decoded['status'] !== BattleStatus::GAME_OVER
+        );
     }
 }
