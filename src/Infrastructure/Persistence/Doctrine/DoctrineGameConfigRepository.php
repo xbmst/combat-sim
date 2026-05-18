@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Exception\CharacterClassNotFoundException;
+use App\Domain\Exception\ItemClassNotFoundException;
 use App\Domain\Port\GameConfigRepositoryInterface;
 use App\Domain\ValueObject\GameClass;
 use App\Domain\ValueObject\Item;
@@ -105,6 +106,10 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+
+        if (!$schemas) {
+            throw new ItemClassNotFoundException();
+        }
 
         return array_map(static function (ItemSchema $schema) {
             return new Item(
