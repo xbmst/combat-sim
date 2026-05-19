@@ -29,12 +29,12 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
         }
 
         return new GameClass(
-            $classSchema->getId(),
-            $classSchema->getName(),
-            $classSchema->getBaseHp(),
-            $classSchema->getBaseAttack(),
-            $classSchema->getBaseDefense(),
-            $classSchema->getBaseAgility(),
+            $classSchema->id,
+            $classSchema->name,
+            $classSchema->baseHp,
+            $classSchema->baseAttack,
+            $classSchema->baseDefense,
+            $classSchema->baseAgility,
         );
     }
 

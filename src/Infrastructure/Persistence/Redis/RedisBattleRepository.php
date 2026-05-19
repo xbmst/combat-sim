@@ -29,6 +29,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
         $data = [
             'battleId' => $battle->getBattleId(),
+            'gameId' => $battle->getGameId(),
             'currentRound' => $battle->getCurrentRound(),
             'roundLogs' => $battle->getRoundLogs(),
             'targetBattles' => $battle->getTargetBattles(),
@@ -99,6 +100,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
         return new Battle(
             $battleId,
+            $data['gameId'],
             $character,
             $opponent,
             $data['targetBattles'],
@@ -109,11 +111,18 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
     public function delete(Battle $battle): void
     {
-        $this->redis->del(self::PREFIX_BATTLE . $id);
+        $this->redis->del(self::PREFIX_BATTLE . $battle->getBattleId());
+        $this->redis->del(self::PREFIX_GAME . $battle->getGameId());
     }
 
     public function findByGameId(string $gameId): Battle
     {
-        // TODO: Implement findByGameId() method.
+        $battleId = $this->redis->get(self::PREFIX_GAME . $gameId);
+
+        if (!$battleId) {
+            throw new BattleNotFoundException(sprintf('Active battle by game "%s" not found or expired.', $gameId));
+        }
+
+        return $this->findById($battleId);
     }
 }

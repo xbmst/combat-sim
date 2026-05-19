@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Api;
 
 use App\Application\Command\PlayRoundCommand;
-use App\Application\Dto\PlayRoundCommandResult;
+use App\Application\Dto\PlayRoundCommandResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class RoundController extends AbstractController
     public function nextRound(string $id): JsonResponse
     {
         try {
-            /** @var PlayRoundCommandResult $result */
+            /** @var PlayRoundCommandResponse $result */
             $result = $this->handle(new PlayRoundCommand($id));
         } catch (HandlerFailedException $e) {
             throw $e;

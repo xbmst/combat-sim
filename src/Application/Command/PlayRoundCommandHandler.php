@@ -40,7 +40,7 @@ readonly class PlayRoundCommandHandler
         $battle->execute($this->damageCalculator, $this->diceRoller, $this->turnPicker);
 
         if ($battle->isCharacterDead()) {
-            $this->battleRepository->delete($battle->getBattleId());
+            $this->battleRepository->delete($battle);
 
             $this->eventBus->dispatch(
                 new GameOverEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
@@ -50,7 +50,7 @@ readonly class PlayRoundCommandHandler
         }
 
         if ($battle->isAllRoundsComplete()) {
-            $this->battleRepository->delete($battle->getBattleId());
+            $this->battleRepository->delete($battle);
 
             $this->eventBus->dispatch(
                 new GameWonEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())

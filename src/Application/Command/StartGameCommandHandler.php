@@ -33,7 +33,7 @@ readonly class StartGameCommandHandler
     {
         $settings = new GameLengthSettings($command->targetBattles);
 
-        $characterClass = $this->configRepository->getClassByName($command->characterClassId);
+        $characterClass = $this->configRepository->getClassById($command->characterClassId);
         $items = $this->configRepository->getItemsByIds($command->equippedItemsIds);
 
         $characterLoadout = new CharacterLoadout($characterClass, $items);

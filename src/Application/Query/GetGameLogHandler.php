@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Query;
 
+use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GetGameLogHandler
@@ -14,7 +15,7 @@ class GetGameLogHandler
 
     public function __invoke(string $gameId): array
     {
-        $sql = 'SELECT game_id as gameId, battle_id as battleId, status, round_logs as logs FROM game_logs WHERE game_id = :id';
+        $sql = 'SELECT id, game_id as gameId, battle_id as battleId, status, round_logs as logs FROM game_logs WHERE game_id = :id ORDER BY id DESC';
 
         $result = $this->db->fetchAssociative($sql, ['id' => $gameId]);
 
@@ -22,8 +23,6 @@ class GetGameLogHandler
             throw new NotFoundHttpException('Game log not found.');
         }
 
-        $result['logs'] = json_decode($result['logs'], true, 512, JSON_THROW_ON_ERROR);
-
-        return $result;
+        return json_decode($result['logs'], true, 512, JSON_THROW_ON_ERROR);
     }
 }
