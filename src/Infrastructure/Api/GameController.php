@@ -27,6 +27,7 @@ class GameController extends AbstractController
 
     public function __construct(private readonly MessageBusInterface $commandBus)
     {
+        $this->messageBus = $this->commandBus;
     }
 
     #[Route(path: '/api/games/start', name: 'api_games_start', methods: [Request::METHOD_POST])]

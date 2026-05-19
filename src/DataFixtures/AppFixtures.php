@@ -19,10 +19,21 @@ class AppFixtures extends Fixture
         $classSchema = new ClassSchema(
             Uuid::v7()->toRfc4122(),
             'MedievalNinja',
-            150,
+            15,
             6,
             5,
             5
+        );
+
+        $manager->persist($classSchema);
+
+        $classSchema = new ClassSchema(
+            Uuid::v7()->toRfc4122(),
+            'MedievalSamurai',
+            14,
+            5,
+            4,
+            3
         );
 
         $manager->persist($classSchema);
@@ -43,9 +54,9 @@ class AppFixtures extends Fixture
         return new ClassSchema(
             Uuid::v7()->toRfc4122(),
             'Medieval' . random_int(1, 100),
-            random_int(150, 250),
-            random_int(1, 15),
-            random_int(1, 15),
+            random_int(16, 25),
+            random_int(1, 10),
+            random_int(1, 7),
             random_int(1, 15),
         );
     }
@@ -58,11 +69,11 @@ class AppFixtures extends Fixture
         return new ItemSchema(
             Uuid::v7()->toRfc4122(),
             'Item'. random_int(1, 100),
+            0,
             random_int(1, 10),
             random_int(1, 10),
             random_int(1, 10),
-            random_int(1, 10),
-            ItemCategory::cases()[random_int(0, count(ItemCategory::cases()))]->value
+            ItemCategory::cases()[random_int(0, count(ItemCategory::cases())-1)]->value
         );
     }
 }

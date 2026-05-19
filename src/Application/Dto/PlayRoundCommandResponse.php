@@ -6,7 +6,7 @@ namespace App\Application\Dto;
 
 use App\Domain\ValueObject\BattleStatus;
 
-readonly class PlayRoundCommandResult
+readonly class PlayRoundCommandResponse
 {
     public function __construct(
         public BattleStatus $status,

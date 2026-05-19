@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Command;
 
-use App\Application\Dto\PlayRoundCommandResult;
+use App\Application\Dto\PlayRoundCommandResponse;
 use App\Application\Event\BattleWonEvent;
 use App\Application\Event\GameOverEvent;
 use App\Application\Event\GameWonEvent;
@@ -33,7 +33,7 @@ readonly class PlayRoundCommandHandler
     ) {
     }
 
-    public function __invoke(PlayRoundCommand $command): PlayRoundCommandResult
+    public function __invoke(PlayRoundCommand $command): PlayRoundCommandResponse
     {
         $battle = $this->battleRepository->findByGameId($command->gameId);
 
@@ -80,9 +80,9 @@ readonly class PlayRoundCommandHandler
         return $result;
     }
 
-    private function result(BattleStatus $status, Battle $battle): PlayRoundCommandResult
+    private function result(BattleStatus $status, Battle $battle): PlayRoundCommandResponse
     {
-        return new PlayRoundCommandResult(
+        return new PlayRoundCommandResponse(
             $status,
             $battle->getRoundLogs(),
             $battle->getCharacter()->stats->currentHp,

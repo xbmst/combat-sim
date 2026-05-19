@@ -18,7 +18,7 @@ class OpponentBuilder
     {
         $baseClass = $this->configRepository->getRandomOpponentClass();
 
-        $items = $this->configRepository->getRandomItems(random_int(0, 6));
+        $items = $this->configRepository->getRandomItems();
 
         return new Warrior(
             'The ' . $baseClass->name,

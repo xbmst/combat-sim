@@ -6,7 +6,7 @@ namespace App\Domain\ValueObject;
 
 enum ItemCategory: string
 {
-    case SWORD = 'sword';
+    case WEAPON = 'weapon';
     case ARMOR = 'armor';
     case SHIELD = 'shield';
     case GLOVES = 'gloves';

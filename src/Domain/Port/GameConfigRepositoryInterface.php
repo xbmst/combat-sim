@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Port;
 
+use App\Domain\ValueObject\CharacterLoadout;
 use App\Domain\ValueObject\GameClass;
 use App\Domain\ValueObject\Item;
 
@@ -23,5 +24,11 @@ interface GameConfigRepositoryInterface
     /**
      * @return Item[]
      */
-    public function getRandomItems(int $limit): array;
+    public function getRandomItems(int $limit = CharacterLoadout::MAX_ITEMS): array;
+
+    /**
+     * @var Item[] $items
+     * @return string[]
+     */
+    public function getItemNamesFromItems(array $items): array;
 }

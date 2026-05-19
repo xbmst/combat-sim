@@ -7,6 +7,7 @@ namespace App\Infrastructure\Persistence\Doctrine;
 use App\Domain\Exception\CharacterClassNotFoundException;
 use App\Domain\Exception\ItemClassNotFoundException;
 use App\Domain\Port\GameConfigRepositoryInterface;
+use App\Domain\ValueObject\CharacterLoadout;
 use App\Domain\ValueObject\GameClass;
 use App\Domain\ValueObject\Item;
 use App\Infrastructure\Persistence\Doctrine\Entity\ClassSchema;
@@ -82,6 +83,11 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
     public function getRandomOpponentClass(): GameClass
     {
         $classSchemas = $this->em->getRepository(ClassSchema::class)->findAll();
+
+        if (!$classSchemas) {
+            throw new CharacterClassNotFoundException('Classes data is not populated');
+        }
+
         $classSchema = $classSchemas[random_int(0, count($classSchemas) - 1)];
 
         if (!$classSchema) {
@@ -98,7 +104,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
         );
     }
 
-    public function getRandomItems(int $limit): array
+    public function getRandomItems(int $limit = CharacterLoadout::MAX_ITEMS): array
     {
         $qb = $this->em->createQueryBuilder();
 
@@ -122,5 +128,12 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
                 $schema->modifierAgility
             );
         }, $schemas);
+    }
+
+    public function getItemNamesFromItems(array $items): array
+    {
+        return array_map(static function (Item $item) {
+            return $item->name;
+        }, $items);
     }
 }

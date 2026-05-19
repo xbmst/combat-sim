@@ -40,9 +40,8 @@ services:
                 - '@App\Domain\Pipeline\Modifier\DefenderItemStatsModifier'
                 - '@App\Domain\Pipeline\Modifier\BaseStrikeModifier'
 
-    App\Domain\Port\EventBusInterface:
-        alias: App\Infrastructure\Messaging\MessengerEventBus
-
     App\Infrastructure\Messaging\MessengerEventBus:
         arguments:
             $eventBus: '@event.bus'
+
+    App\Domain\Port\EventBusInterface: '@App\Infrastructure\Messaging\MessengerEventBus'

@@ -20,10 +20,10 @@ final class Version20260518075314 extends AbstractMigration
         $sql = 'INSERT INTO item_schemas (name, modifier_hp, modifier_attack, modifier_defense, modifier_agility, category) VALUES (?, 0, ?, ?, ?, ?)';
 
         $classes = [
-            ['Sword', 5, -1, -10, ItemCategory::SWORD->value],
-            ['Long Sword', 8, -2, -15, ItemCategory::SWORD->value],
-            ['Dagger', 2, 0, 5, ItemCategory::SWORD->value],
-            ['Battleaxe', 9, -4, -7, ItemCategory::SWORD->value],
+            ['Sword', 5, -1, -10, ItemCategory::WEAPON->value],
+            ['Long Sword', 8, -2, -15, ItemCategory::WEAPON->value],
+            ['Dagger', 2, 0, 5, ItemCategory::WEAPON->value],
+            ['Battleaxe', 9, -4, -7, ItemCategory::WEAPON->value],
             ['Leather Armor', 0, 3, 3, ItemCategory::ARMOR->value],
             ['Breastplate', 0, 6, -4, ItemCategory::ARMOR->value],
             ['Plate Armor', 0, 8, 0, ItemCategory::ARMOR->value],
