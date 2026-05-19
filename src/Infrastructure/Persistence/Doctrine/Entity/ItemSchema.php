@@ -14,47 +14,40 @@ class ItemSchema
     public function __construct(
         #[ORM\Id]
         #[ORM\Column(type: Types::GUID)]
-        #[ORM\GeneratedValue]
         public string $id {
             get => $this->id;
+            set => $value;
         },
         #[ORM\Column(type: Types::STRING)]
         public string $name {
             get => $this->name;
-            set(string $v) {
-                $this->name = $v;
-            }
+            set => $value;
         },
         #[ORM\Column(type: Types::INTEGER)]
         public int $modifierHp {
             get => $this->modifierHp;
-            set(int $v) {
-                $this->modifierHp = $v;
-            }
+            set => $value;
         },
         #[ORM\Column(type: Types::INTEGER)]
         public int $modifierAttack {
             get => $this->modifierAttack;
-            set(int $v) {
-                $this->modifierAttack = $v;
-            }
+            set => $value;
         },
         #[ORM\Column(type: Types::INTEGER)]
         public int $modifierDefense {
             get => $this->modifierDefense;
-            set(int $v) {
-                $this->modifierDefense = $v;
-            }
+            set => $value;
         },
         #[ORM\Column(type: Types::INTEGER)]
         public int $modifierAgility {
             get => $this->modifierAgility;
-            set(int $v) {
-                $this->modifierAgility = $v;
-            }
+            set => $value;
         },
         #[ORM\Column(type: Types::STRING)]
-        public string $category,
+        public string $category {
+            get => $this->category;
+            set => $value;
+        },
     ) {
     }
 }

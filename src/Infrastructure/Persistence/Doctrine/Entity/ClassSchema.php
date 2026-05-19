@@ -14,44 +14,34 @@ class ClassSchema
     public function __construct(
         #[ORM\Id]
         #[ORM\Column(type: Types::GUID)]
-        #[ORM\GeneratedValue]
         public string $id {
             get => $this->id;
+            set => $value;
         },
         #[ORM\Column(type: Types::STRING)]
         public string $name {
             get => $this->name;
-            set(string $v) {
-                $this->name = $v;
-            }
+            set => $value;
         },
         #[ORM\Column(type: Types::INTEGER)]
         public int $baseHp {
-            set(int $v) {
-                $this->baseHp = $v;
-            }
             get => $this->baseHp;
+            set => $value;
         },
         #[ORM\Column(type: Types::INTEGER)]
         public int $baseAttack {
             get => $this->baseAttack;
-            set(int $v) {
-                $this->baseAttack = $v;
-            }
+            set => $value;
         },
         #[ORM\Column(type: Types::INTEGER)]
         public int $baseDefense {
             get => $this->baseDefense;
-            set(int $v) {
-                $this->baseDefense = $v;
-            }
+            set => $value;
         },
         #[ORM\Column(type: Types::INTEGER)]
         public int $baseAgility {
             get => $this->baseAgility;
-            set(int $v) {
-                $this->baseAgility = $v;
-            }
+            set => $value;
         }
     ) {
     }
