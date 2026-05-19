@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Api;
 
 use App\Application\Command\StartGameCommand;
+use App\Application\Query\GetGameLogHandler;
 use App\Application\Query\GetSetupDataQuery;
 use App\Application\Query\GetSetupDataQueryHandler;
 use OpenApi\Attributes as OA;
@@ -49,7 +50,7 @@ class GameController extends AbstractController
         return $this->json(['status' => 'game started!']);
     }
 
-    // TODO: separate controller?
+    // TODO: consider separate controller
     #[Route('/api/games/setup-data', methods: [Request::METHOD_GET])]
     #[OA\Get(summary: 'Get all available classes and items to build a Character')]
     public function getSetupData(GetSetupDataQueryHandler $handler): JsonResponse
@@ -57,5 +58,12 @@ class GameController extends AbstractController
         $data = $handler->__invoke(new GetSetupDataQuery());
 
         return $this->json($data);
+    }
+
+    #[Route('/api/games/{id}/logs', methods: [Request::METHOD_GET])]
+    #[OA\Get(summary: 'Get game logs')]
+    public function getLogs(string $id, GetGameLogHandler $handler): JsonResponse
+    {
+        return $this->json($handler->__invoke($id));
     }
 }
