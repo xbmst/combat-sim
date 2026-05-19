@@ -40,12 +40,20 @@ readonly class CharacterLoadout
      */
     public function validateLoadoutUniqueness(array $items): void
     {
-        foreach ($items as $i => $item) {
-            if ($item->category === $items[$i + 1]->category) {
+        $matched = [];
+
+        foreach ($items as $item) {
+            if (!$item instanceof Item || !isset($item->category)) {
+                throw new InvalidLoadoutException('Invalid Item provided');
+            }
+
+            if (isset($matched[$item->category])) {
                 throw new InvalidLoadoutException(
                     sprintf('You cannot equip multiple items of the same category - %s.', $item->category)
                 );
             }
+
+            $matched[$item->category] = true;
         }
     }
 }

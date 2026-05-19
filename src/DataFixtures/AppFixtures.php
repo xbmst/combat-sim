@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $classSchema = new ClassSchema(
-            Uuid::v7()->toRfc4122(),
+            '123e4567-e89b-12d3-a456-426614174000',
             'MedievalNinja',
             15,
             6,
@@ -28,7 +28,7 @@ class AppFixtures extends Fixture
         $manager->persist($classSchema);
 
         $classSchema = new ClassSchema(
-            Uuid::v7()->toRfc4122(),
+            '123e4567-e89b-12d3-a456-426614174001',
             'MedievalSamurai',
             14,
             5,

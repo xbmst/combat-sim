@@ -32,6 +32,12 @@ final class Version20260518074445 extends AbstractMigration
             "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQLPlatform'."
         );
 
+        $this->addSql('CREATE TABLE game_logs (id UUID NOT NULL DEFAULT gen_random_uuid(), game_id VARCHAR(255) NOT NULL, battle_id VARCHAR(255) NOT NULL, status VARCHAR(255) NOT NULL, round_logs JSONB NOT NULL, PRIMARY KEY (id))');
+        $this->abortIf(
+            !$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform,
+            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQLPlatform'."
+        );
+
         $this->addSql('CREATE TABLE item_schemas (id UUID NOT NULL DEFAULT gen_random_uuid(), name VARCHAR(255) NOT NULL, modifier_hp INT NOT NULL, modifier_attack INT NOT NULL, modifier_defense INT NOT NULL, modifier_agility INT NOT NULL, category VARCHAR(255) NOT NULL, PRIMARY KEY (id))');
         $this->abortIf(
             !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform,
@@ -46,20 +52,26 @@ final class Version20260518074445 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQL120Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQL120Platform'."
+            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform,
+            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQLPlatform'."
         );
 
         $this->addSql('DROP TABLE "class_schemas"');
         $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQL120Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQL120Platform'."
+            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform,
+            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQLPlatform'."
+        );
+
+        $this->addSql('DROP TABLE "game_logs"');
+        $this->abortIf(
+            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform,
+            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQLPlatform'."
         );
 
         $this->addSql('DROP TABLE "item_schemas"');
         $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQL120Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQL120Platform'."
+            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform,
+            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\PostgreSQLPlatform'."
         );
 
         $this->addSql('DROP TABLE "messenger_messages"');

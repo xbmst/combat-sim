@@ -20,24 +20,70 @@ class GameControllerTest extends WebTestCase
 
     public function test_it_starts_game(): void
     {
-        $battleId = Uuid::v7()->toRfc4122();
-        $playerId = Uuid::v7()->toRfc4122();
-        $characterClassId = 'MedievalNinja';
-        $equippedItemsIds = [];
+        $this->client->request('GET', '/api/games/setup-data');
+        $decoded = json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->client->request(
             'POST',
             '/api/games/start',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode([
-                'battleId' => $battleId,
-                'playerId' => $playerId,
+                'characterClassId' => $decoded['classes'][0]['id'],
+                'equippedItemsIds' => [],
+                'targetBattles' => 1,
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+    public function test_it_starts_game_with_max_items(): void
+    {
+        $this->client->request('GET', '/api/games/setup-data');
+        $decoded = json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        $items = [];
+        $categories = [];
+        foreach ($decoded['items'] as $item) {
+            if (!in_array($item['category'], $categories, true)) {
+                $categories[] = $item['category'];
+                $items[] = $item['id'];
+            }
+            if (count($items) === 3) {
+                break;
+            }
+        }
+
+        $characterClassId = $decoded['classes'][0]['id'];
+
+        $this->client->request(
+            'POST',
+            '/api/games/start',
+            server: ['CONTENT_TYPE' => 'application/json'],
+            content: json_encode([
                 'characterClassId' => $characterClassId,
-                'equippedItemsIds' => $equippedItemsIds,
+                'equippedItemsIds' => $items,
                 'targetBattles' => 3,
             ], JSON_THROW_ON_ERROR)
         );
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+
+    public function test_it_fetches_setup_data(): void
+    {
+        $this->client->request(
+            'GET',
+            '/api/games/setup-data',
+        );
+
+        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        $decoded = json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertArrayHasKey('classes', $decoded);
+        self::assertArrayHasKey('items', $decoded);
+        self::assertArrayHasKey('rules', $decoded);
     }
 }

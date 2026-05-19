@@ -13,9 +13,9 @@ readonly class DefenderItemStatsModifier implements StrikeModifierInterface
     {
         foreach ($context->defender->items as $item) {
             $context->defender->stats = $context->defender->stats->increase(
-                $item['modifierAttack'],
-                $item['modifierDefense'],
-                $item['modifierAgility'],
+                $item->modifierAttack ?? $item['modifierAttack'],
+                $item->modifierDefense ?? $item['modifierDefense'],
+                $item->modifierAgility ?? $item['modifierAgility'],
             );
         }
 
