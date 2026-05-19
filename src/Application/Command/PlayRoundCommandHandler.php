@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace App\Application\Command;
 
 use App\Application\Dto\PlayRoundCommandResult;
+use App\Application\Event\BattleWonEvent;
+use App\Application\Event\GameOverEvent;
+use App\Application\Event\GameWonEvent;
+use App\Application\Event\NextTurnEvent;
 use App\Domain\Model\Battle;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
+use App\Domain\Port\EventBusInterface;
 use App\Domain\Service\DamageCalculatorInterface;
 use App\Domain\Service\DiceRollerInterface;
 use App\Domain\Service\OpponentBuilder;
@@ -24,6 +29,7 @@ readonly class PlayRoundCommandHandler
         private DiceRollerInterface $diceRoller,
         private TurnPickerInterface $turnPicker,
         private OpponentBuilder $opponentBuilder,
+        private EventBusInterface $eventBus,
     ) {
     }
 
@@ -35,21 +41,37 @@ readonly class PlayRoundCommandHandler
 
         if ($battle->isCharacterDead()) {
             $this->battleRepository->delete($battle->getBattleId());
-            // TODO: $this->eventBus->dispatch(new GameLostEvent(...)); save to sql
+
+            $this->eventBus->dispatch(
+                new GameOverEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
+            );
+
             return $this->result(BattleStatus::GAME_OVER, $battle);
         }
 
         if ($battle->isAllRoundsComplete()) {
             $this->battleRepository->delete($battle->getBattleId());
-            // TODO: $this->eventBus->dispatch(new GameWonEvent(...));
+
+            $this->eventBus->dispatch(
+                new GameWonEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
+            );
+
             return $this->result(BattleStatus::GAME_WON, $battle);
         }
 
         if ($battle->isOpponentDead()) {
             $battle->setupNextBattle($this->opponentBuilder->build());
 
+            $this->eventBus->dispatch(
+                new BattleWonEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
+            );
+
             $result = $this->result(BattleStatus::BATTLE_WON, $battle);
         } else {
+            $this->eventBus->dispatch(
+                new NextTurnEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
+            );
+
             $result = $this->result(BattleStatus::NEXT_TURN, $battle);
         }
 
