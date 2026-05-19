@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Infrastructure\Api;
 
 use App\Application\Command\PlayRoundCommand;
+use App\Application\Command\StartGameCommand;
 use App\Application\Dto\PlayRoundCommandResponse;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +27,17 @@ class RoundController extends AbstractController
         $this->messageBus = $this->commandBus;
     }
 
-    #[Route('/api/battles/{id}/next-round', name: 'api_battles_next_round', methods: [Request::METHOD_POST])]
+    #[Route('/api/games/{id}/next-round', name: 'api_battles_next_round', methods: [Request::METHOD_POST])]
+    #[OA\Tag(name: 'Games')]
+    #[OA\Post(
+        summary: 'Simulate next round',
+        responses: [
+            new OA\Response(
+                response: 200,
+                content: new OA\JsonContent(ref: new Model(type: PlayRoundCommandResponse::class))
+            )
+        ]
+    )]
     public function nextRound(string $id): JsonResponse
     {
         try {

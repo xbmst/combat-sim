@@ -45,3 +45,11 @@ services:
             $eventBus: '@event.bus'
 
     App\Domain\Port\EventBusInterface: '@App\Infrastructure\Messaging\MessengerEventBus'
+
+    App\Application\Command\StartGameCommandHandler:
+        arguments:
+            $eventBus: '@App\Domain\Port\EventBusInterface'
+
+    App\Application\Command\PlayRoundCommandHandler:
+        arguments:
+            $eventBus: '@App\Domain\Port\EventBusInterface'
