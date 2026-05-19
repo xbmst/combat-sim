@@ -11,4 +11,6 @@ interface ActiveBattleRepositoryInterface
     public function save(Battle $battle): void;
 
     public function findById(string $battleId): Battle;
+
+    public function findByGameId(string $gameId): Battle;
 }

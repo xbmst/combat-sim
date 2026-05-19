@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Api;
 
 use App\Application\Command\StartGameCommand;
+use App\Application\Dto\StartGameCommandResponse;
 use App\Application\Query\GetGameLogHandler;
 use App\Application\Query\GetSetupDataQuery;
 use App\Application\Query\GetSetupDataQueryHandler;
@@ -16,11 +17,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 class GameController extends AbstractController
 {
+    use HandleTrait;
+
     public function __construct(private readonly MessageBusInterface $commandBus)
     {
     }
@@ -40,14 +44,17 @@ class GameController extends AbstractController
     public function startGame(#[MapRequestPayload] StartGameCommand $command): JsonResponse
     {
         try {
-            $this->commandBus->dispatch($command);
+            /** @var StartGameCommandResponse $result */
+            $result = $this->handle($command);
         } catch (HandlerFailedException $e) {
             throw $e;
         } catch (ExceptionInterface $e) {
             throw $e;
         }
 
-        return $this->json(['status' => 'game started!']);
+        return $this->json([
+            'gameId' => $result->gameId,
+        ]);
     }
 
     // TODO: consider separate controller

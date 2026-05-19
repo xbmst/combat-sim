@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Command;
+namespace App\Application\Dto;
 
-readonly class PlayRoundCommand
+class StartGameCommandResponse
 {
     public function __construct(public string $gameId)
     {

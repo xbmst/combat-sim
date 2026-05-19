@@ -13,7 +13,8 @@ use Redis;
 
 class RedisBattleRepository implements ActiveBattleRepositoryInterface
 {
-    private const string PREFIX = 'battle:';
+    private const string PREFIX_BATTLE = 'battle:';
+    private const string PREFIX_GAME = 'game:';
     private const int TTL_SECONDS = 7200; // 2 hours
 
     public function __construct(
@@ -52,15 +53,21 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
         ];
 
         $this->redis->setex(
-            self::PREFIX . $battle->getBattleId(),
+            self::PREFIX_BATTLE . $battle->getBattleId(),
             self::TTL_SECONDS,
             json_encode($data, JSON_THROW_ON_ERROR)
+        );
+
+        $this->redis->setex(
+            self::PREFIX_GAME . $battle->getGameId(),
+            self::TTL_SECONDS,
+            $battle->getBattleId()
         );
     }
 
     public function findById(string $battleId): Battle
     {
-        $json = $this->redis->get(self::PREFIX . $battleId);
+        $json = $this->redis->get(self::PREFIX_BATTLE . $battleId);
         if (!$json) {
             throw new BattleNotFoundException(sprintf('Active battle "%s" not found or expired.', $battleId));
         }
@@ -100,8 +107,13 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
         );
     }
 
-    public function delete(string $id): void
+    public function delete(Battle $battle): void
     {
-        $this->redis->del(self::PREFIX . $id);
+        $this->redis->del(self::PREFIX_BATTLE . $id);
+    }
+
+    public function findByGameId(string $gameId): Battle
+    {
+        // TODO: Implement findByGameId() method.
     }
 }

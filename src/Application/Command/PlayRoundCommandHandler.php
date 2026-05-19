@@ -35,7 +35,7 @@ readonly class PlayRoundCommandHandler
 
     public function __invoke(PlayRoundCommand $command): PlayRoundCommandResult
     {
-        $battle = $this->battleRepository->findById($command->battleId);
+        $battle = $this->battleRepository->findByGameId($command->gameId);
 
         $battle->execute($this->damageCalculator, $this->diceRoller, $this->turnPicker);
 

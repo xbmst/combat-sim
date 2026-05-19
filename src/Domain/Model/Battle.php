@@ -12,7 +12,8 @@ class Battle
 {
     public function __construct(
         private readonly string $battleId,
-        private readonly Warrior $character,
+        private readonly string $gameId,
+        private Warrior $character,
         private Warrior $opponent,
         private readonly int $targetBattles,
         private int $currentRound = 1,
@@ -83,8 +84,8 @@ class Battle
         $this->roundLogs = [];
         $this->opponent = $newOpponent;
 
-        $this->character->resetHealth();
-        $this->roundLogs[] = 'Character Health has been healed';
+        $this->character = $this->character->resetHealth();
+        $this->roundLogs[] = 'Character Health has been restored';
     }
 
     public function isCharacterDead(): bool
@@ -106,5 +107,10 @@ class Battle
     public function isAttackDodged(DiceRollerInterface $dice, Warrior $defender): bool
     {
         return $dice->roll() <= $defender->stats->agility;
+    }
+
+    public function getGameId(): string
+    {
+        return $this->gameId;
     }
 }
