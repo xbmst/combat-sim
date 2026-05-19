@@ -64,3 +64,16 @@ EXPOSE 80
 
 CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
 
+# Messenger worker
+FROM php_base AS worker
+
+COPY --from=builder --chown=www-data:www-data /app /app
+
+COPY docker/php/opcache.worker.ini /usr/local/etc/php/conf.d/zz-opcache.ini
+
+RUN mkdir -p /app/var/cache /app/var/log \
+    && chown -R www-data:www-data /app/var
+
+USER www-data
+
+CMD ["sh", "-lc", "exec php bin/console --no-debug messenger:consume async --memory-limit=128M --time-limit=3600 -vv"]
