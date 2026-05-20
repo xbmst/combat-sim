@@ -24,7 +24,7 @@ docker compose up -d
 http://.../api/docs
 
 # default:
-http://localhost/api/docs
+http://localhost:8080/api/docs
 ```
 
 ### How to play:
