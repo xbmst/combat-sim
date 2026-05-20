@@ -7,6 +7,7 @@ namespace App\Domain\Model;
 use App\Domain\Service\DamageCalculatorInterface;
 use App\Domain\Service\DiceRollerInterface;
 use App\Domain\Service\TurnPickerInterface;
+use App\Domain\ValueObject\GameLengthSettings;
 
 class Battle
 {
@@ -100,8 +101,11 @@ class Battle
 
     public function isAllRoundsComplete(): bool
     {
-        return $this->isOpponentDead()
-            && ($this->currentRound >= $this->targetBattles);
+        return (
+            $this->isOpponentDead()
+                && ($this->currentRound >= $this->targetBattles)
+            )
+            || $this->currentRound > GameLengthSettings::MAX_BATTLES;
     }
 
     public function isAttackDodged(DiceRollerInterface $dice, Warrior $defender): bool
