@@ -31,4 +31,8 @@ interface GameConfigRepositoryInterface
      * @return string[]
      */
     public function getItemNamesFromItems(array $items): array;
+
+    public function getAllClasses(): array;
+
+    public function getAllItems(): array;
 }

@@ -6,7 +6,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Model\Warrior;
 
-class TurnPicker implements TurnPickerInterface
+class TurnPicker
 {
     public function pick(Warrior $character, Warrior $opponent): array
     {

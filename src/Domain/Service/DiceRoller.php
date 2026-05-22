@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Service;
 
-class DiceRoller implements DiceRollerInterface
+class DiceRoller
 {
     public function roll(int $min = 1, int $max = 100): int
     {

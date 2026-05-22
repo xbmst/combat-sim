@@ -9,7 +9,7 @@ use App\Domain\Pipeline\StrikeModifierInterface;
 use App\Domain\ValueObject\StrikeContext;
 use App\Domain\ValueObject\StrikeResult;
 
-readonly class DamageCalculator implements DamageCalculatorInterface
+readonly class DamageCalculator
 {
     /**
      * @param StrikeModifierInterface[] $pipeline

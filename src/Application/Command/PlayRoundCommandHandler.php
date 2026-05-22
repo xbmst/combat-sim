@@ -12,10 +12,10 @@ use App\Application\Event\NextTurnEvent;
 use App\Domain\Model\Battle;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
 use App\Domain\Port\EventBusInterface;
-use App\Domain\Service\DamageCalculatorInterface;
-use App\Domain\Service\DiceRollerInterface;
+use App\Domain\Service\DamageCalculator;
+use App\Domain\Service\DiceRoller;
 use App\Domain\Service\OpponentBuilder;
-use App\Domain\Service\TurnPickerInterface;
+use App\Domain\Service\TurnPicker;
 use App\Domain\ValueObject\BattleStatus;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -25,9 +25,9 @@ readonly class PlayRoundCommandHandler
 
     public function __construct(
         private ActiveBattleRepositoryInterface $battleRepository,
-        private DamageCalculatorInterface $damageCalculator,
-        private DiceRollerInterface $diceRoller,
-        private TurnPickerInterface $turnPicker,
+        private DamageCalculator $damageCalculator,
+        private DiceRoller $diceRoller,
+        private TurnPicker $turnPicker,
         private OpponentBuilder $opponentBuilder,
         private EventBusInterface $eventBus,
     ) {

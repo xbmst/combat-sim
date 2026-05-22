@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Model;
 
-use App\Domain\Service\DamageCalculatorInterface;
-use App\Domain\Service\DiceRollerInterface;
-use App\Domain\Service\TurnPickerInterface;
+use App\Domain\Service\DamageCalculator;
+use App\Domain\Service\DiceRoller;
+use App\Domain\Service\TurnPicker;
 use App\Domain\ValueObject\GameLengthSettings;
 
 class Battle
@@ -27,7 +27,7 @@ class Battle
         return $this->targetBattles;
     }
 
-    public function execute(DamageCalculatorInterface $damageCalculator, DiceRollerInterface $dice, TurnPickerInterface $turnPicker): void
+    public function execute(DamageCalculator $damageCalculator, DiceRoller $dice, TurnPicker $turnPicker): void
     {
         // TODO: refactor to pipeline?
         [$attacker, $defender] = $turnPicker->pick($this->character, $this->opponent);
@@ -40,10 +40,12 @@ class Battle
             }
         }
 
-        $this->strike($defender, $attacker, $damageCalculator);
+        if (!$this->isAttackDodged($dice, $attacker)) {
+            $this->strike($defender, $attacker, $damageCalculator);
+        }
     }
 
-    private function strike(Warrior $attacker, Warrior $defender, DamageCalculatorInterface $damageCalculator): void
+    private function strike(Warrior $attacker, Warrior $defender, DamageCalculator $damageCalculator): void
     {
         $result = $damageCalculator->calculateStrike($attacker, $defender);
         $this->roundLogs[] = $result->logs;
@@ -108,7 +110,7 @@ class Battle
             || $this->currentRound > GameLengthSettings::MAX_BATTLES;
     }
 
-    public function isAttackDodged(DiceRollerInterface $dice, Warrior $defender): bool
+    public function isAttackDodged(DiceRoller $dice, Warrior $defender): bool
     {
         return $dice->roll() <= $defender->stats->agility;
     }

@@ -13,10 +13,11 @@ use App\Domain\ValueObject\Item;
 use App\Infrastructure\Persistence\Doctrine\Entity\ClassSchema;
 use App\Infrastructure\Persistence\Doctrine\Entity\ItemSchema;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Connection;
 
 readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
 {
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em, private Connection $connection)
     {
     }
 
@@ -135,5 +136,19 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
         return array_map(static function (Item $item) {
             return $item->name;
         }, $items);
+    }
+
+    public function getAllClasses(): array
+    {
+        return $this->connection->fetchAllAssociative(
+            'SELECT id, name, base_hp as baseHp, base_attack as baseAttack, base_defense as baseDefense, base_agility as baseAgility FROM class_schemas'
+        );
+    }
+
+    public function getAllItems(): array
+    {
+        return $this->connection->fetchAllAssociative(
+            'SELECT id, name, modifier_attack as modifierAttack, modifier_defense as modifierDefense, modifier_agility as modifierAgility FROM item_schemas'
+        );
     }
 }
