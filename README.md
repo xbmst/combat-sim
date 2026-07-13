@@ -13,18 +13,20 @@ POSTGRES_USER=app_user
 
 From project root run one 
 ```shell
-docker compose up -d 
+docker compose --env-file .env --env-file .env.local up -d
 # or
 # make dev
 ```
 
-### API docs:
+`make dev` automatically loads `.env.local` after `.env` when file exists.
+
+### API doc:
 
 ```
-http://.../api/docs
+http://.../api/doc
 
 # default:
-http://localhost:8080/api/docs
+http://localhost:8080/api/doc
 ```
 
 ### How to play:

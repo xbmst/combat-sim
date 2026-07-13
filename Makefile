@@ -3,7 +3,6 @@ MAKEFILE_PATH := $(realpath $(lastword $(MAKEFILE_LIST)))
 MAKEFILE_DIR := $(dir $(MAKEFILE_PATH))
 DOCKER_COMPOSE_FILE := $(MAKEFILE_DIR)compose.yml
 DOCKER_COMPOSE_OVERRIDE_FILE := $(MAKEFILE_DIR)compose.override.yml
-DOCKER_COMPOSE_DEV := docker compose --project-directory "$(MAKEFILE_DIR)" -f "$(DOCKER_COMPOSE_FILE)" -f "$(DOCKER_COMPOSE_OVERRIDE_FILE)"
 FORWARD_ARG_TARGETS := dev build stop down test api-sh db-cli redis-cli
 RAW_EXTRA_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 EXTRA_ARGS := $(filter-out --,$(RAW_EXTRA_ARGS))
@@ -16,11 +15,18 @@ DB_NAME := app_db
 # --- Configuration ---
 .DEFAULT_GOAL := help
 
-ENV_FILE ?= $(MAKEFILE_DIR).env
-ifneq (,$(wildcard $(ENV_FILE)))
-    include $(ENV_FILE)
-    export
+ENV_FILES := $(MAKEFILE_DIR).env
+ifneq (,$(wildcard $(MAKEFILE_DIR).env.local))
+    ENV_FILES += $(MAKEFILE_DIR).env.local
 endif
+
+DOCKER_COMPOSE_ENV_FILES := $(foreach file,$(ENV_FILES),--env-file "$(file)")
+DOCKER_COMPOSE_FILES := -f "$(DOCKER_COMPOSE_FILE)"
+ifneq (,$(wildcard $(DOCKER_COMPOSE_OVERRIDE_FILE)))
+    DOCKER_COMPOSE_FILES += -f "$(DOCKER_COMPOSE_OVERRIDE_FILE)"
+endif
+
+DOCKER_COMPOSE_DEV := docker compose --project-directory "$(MAKEFILE_DIR)" $(DOCKER_COMPOSE_ENV_FILES) $(DOCKER_COMPOSE_FILES)
 
 ifneq ($(filter $(firstword $(MAKECMDGOALS)),$(FORWARD_ARG_TARGETS)),)
 $(eval $(EXTRA_ARGS):;@:)

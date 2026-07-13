@@ -1,3 +1,8 @@
+x-env-files: &env-files
+  - path: .env
+  - path: .env.local
+    required: false
+
 services:
   api:
     build:
@@ -6,15 +11,14 @@ services:
       target: api
     image: mhcsim-api:latest
     restart: unless-stopped
-    env_file:
-      - .env
+    env_file: *env-files
     depends_on:
       database:
         condition: service_healthy
       redis:
         condition: service_healthy
     ports:
-      - "${API_PORT}:80"
+      - "${API_PORT:?API_PORT must be set}:80"
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - .:/app
@@ -27,20 +31,15 @@ services:
 
   database:
     image: postgres:${POSTGRES_VERSION:-18}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
+    env_file: *env-files
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -d \"$$POSTGRES_DB\" -U \"$$POSTGRES_USER\""]
       timeout: 5s
       retries: 5
       start_period: 60s
     restart: unless-stopped
-    env_file:
-      - .env
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT:?POSTGRES_PORT must be set}:5432"
     volumes:
       - database_data:/var/lib/postgresql:rw
 
@@ -59,7 +58,7 @@ services:
     volumes:
       - redis_data:/data
     ports:
-      - "${REDIS_PORT}:6379"
+      - "${REDIS_PORT:?REDIS_PORT must be set}:6379"
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -73,8 +72,7 @@ services:
       target: worker
     image: mhcsim-worker:latest
     restart: unless-stopped
-    env_file:
-      - .env
+    env_file: *env-files
     depends_on:
       database:
         condition: service_healthy
