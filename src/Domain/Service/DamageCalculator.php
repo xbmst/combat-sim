@@ -20,12 +20,17 @@ readonly class DamageCalculator
 
     public function calculateStrike(Warrior $attacker, Warrior $defender): StrikeResult
     {
-        $context = new StrikeContext($attacker, $defender, $attacker->stats->attack);
+        $context = StrikeContext::fromWarriors($attacker, $defender);
 
         foreach ($this->pipeline as $modifier) {
             $context = $modifier->apply($context);
         }
 
-        return new StrikeResult($context->damageAmount, $context->logs);
+        return new StrikeResult(
+            $context->damageAmount,
+            $context->attackerStats,
+            $context->defenderStats,
+            $context->logs,
+        );
     }
 }

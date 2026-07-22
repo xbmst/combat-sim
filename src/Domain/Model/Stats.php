@@ -7,7 +7,7 @@ namespace App\Domain\Model;
 use App\Domain\ValueObject\GameClass;
 use App\Domain\ValueObject\Item;
 
-class Stats
+readonly class Stats
 {
     public function __construct(
         public int $maxHp,

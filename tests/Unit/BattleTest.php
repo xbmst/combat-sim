@@ -19,21 +19,21 @@ class BattleTest extends TestCase
 
         $battle = new Battle('id1', 'id1', $character, $opponent, 1);
 
-        $diceRollerMock = $this->createMock(DiceRoller::class);
+        $diceRollerMock = $this->createStub(DiceRoller::class);
 
         // Dice roll 49, agility 50 -> dodged
         $diceRollerMock->method('roll')->willReturn(49);
-        self::assertTrue($battle->isAttackDodged($diceRollerMock, $character), 'Should dodge if dice (49) <= agility (50)');
+        self::assertTrue($battle->isAttackDodged($diceRollerMock, $character->stats), 'Should dodge if dice (49) <= agility (50)');
 
         // Dice roll 50, agility 50 -> dodged
-        $diceRollerMock = $this->createMock(DiceRoller::class);
+        $diceRollerMock = $this->createStub(DiceRoller::class);
         $diceRollerMock->method('roll')->willReturn(50);
-        self::assertTrue($battle->isAttackDodged($diceRollerMock, $character), 'Should dodge if dice (50) <= agility (50)');
+        self::assertTrue($battle->isAttackDodged($diceRollerMock, $character->stats), 'Should dodge if dice (50) <= agility (50)');
 
         // Dice roll 51, agility 50 -> not dodged
-        $diceRollerMock = $this->createMock(DiceRoller::class);
+        $diceRollerMock = $this->createStub(DiceRoller::class);
         $diceRollerMock->method('roll')->willReturn(51);
-        self::assertFalse($battle->isAttackDodged($diceRollerMock, $character), 'Should not dodge if dice (51) > agility (50)');
+        self::assertFalse($battle->isAttackDodged($diceRollerMock, $character->stats), 'Should not dodge if dice (51) > agility (50)');
     }
 
     public function test_game_is_over_when_someone_dies(): void

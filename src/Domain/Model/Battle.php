@@ -8,6 +8,7 @@ use App\Domain\Service\DamageCalculator;
 use App\Domain\Service\DiceRoller;
 use App\Domain\Service\TurnPicker;
 use App\Domain\ValueObject\GameLengthSettings;
+use App\Domain\ValueObject\StrikeResult;
 
 class Battle
 {
@@ -33,8 +34,10 @@ class Battle
         [$attacker, $defender] = $turnPicker->pick($this->character, $this->opponent);
         $this->roundLogs[] = $attacker->name.' starts first!';
 
-        if (!$this->isAttackDodged($dice, $defender)) {
-            $this->strike($attacker, $defender, $damageCalculator);
+        $strikeResult = $damageCalculator->calculateStrike($attacker, $defender);
+
+        if (!$this->isAttackDodged($dice, $strikeResult->defenderStats)) {
+            $this->strike($attacker, $defender, $strikeResult);
 
             if ($this->isOpponentDead()) {
                 return;
@@ -43,16 +46,17 @@ class Battle
             $this->roundLogs[] = sprintf('%s tries to hit but %s dodges!', $attacker->name, $defender->name);
         }
 
-        if (!$this->isAttackDodged($dice, $attacker)) {
-            $this->strike($defender, $attacker, $damageCalculator);
+        $counterStrikeResult = $damageCalculator->calculateStrike($defender, $attacker);
+
+        if (!$this->isAttackDodged($dice, $counterStrikeResult->defenderStats)) {
+            $this->strike($defender, $attacker, $counterStrikeResult);
         } else {
             $this->roundLogs[] = sprintf('%s tries to hit but %s dodges!', $defender->name, $attacker->name);
         }
     }
 
-    private function strike(Warrior $attacker, Warrior $defender, DamageCalculator $damageCalculator): void
+    private function strike(Warrior $attacker, Warrior $defender, StrikeResult $result): void
     {
-        $result = $damageCalculator->calculateStrike($attacker, $defender);
         $this->roundLogs[] = $result->logs;
 
         $defender->stats = ($defender->takeDamage($result->damageToDeal))->stats;
@@ -93,7 +97,7 @@ class Battle
         $this->opponent = $newOpponent;
 
         $this->character = $this->character->resetHealth();
-        $this->roundLogs[] = 'Character Health has been restored';
+        $this->addLog('Character Health has been restored');
     }
 
     public function isCharacterDead(): bool
@@ -115,13 +119,22 @@ class Battle
             || $this->currentRound > GameLengthSettings::MAX_BATTLES;
     }
 
-    public function isAttackDodged(DiceRoller $dice, Warrior $defender): bool
+    public function isAttackDodged(DiceRoller $dice, Stats $defenderStats): bool
     {
-        return $dice->roll() <= $defender->stats->agility;
+        $diceResult = $dice->roll();
+
+        $this->addLog(sprintf('[Dice: %d vs %d Warrior]', $diceResult, $defenderStats->agility));
+
+        return $diceResult <= $defenderStats->agility;
     }
 
     public function getGameId(): string
     {
         return $this->gameId;
+    }
+
+    private function addLog(string $message): void
+    {
+        $this->roundLogs[] = $message;
     }
 }

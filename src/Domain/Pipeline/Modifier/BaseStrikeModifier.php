@@ -11,20 +11,13 @@ class BaseStrikeModifier implements StrikeModifierInterface
 {
     public function apply(StrikeContext $context): StrikeContext
     {
-        return $context->withDamage($this->calculateDamage($context));
-    }
+        $totalAttack = $context->attackerStats->attack;
+        $totalDefense = $context->defenderStats->defense;
 
-    private function calculateDamage(StrikeContext $context): int
-    {
-        $totalAttack = $context->attacker->stats->attack;
-        $totalDefense = $context->defender->stats->defense;
+        $damage = max(0, $totalAttack - $totalDefense);
 
-        $rawDamage = $totalAttack - $totalDefense;
-
-        $finalDamage = max(0, $rawDamage);
-
-        $context->withLog(sprintf('[Math: %d attack vs %d defense]', $totalAttack, $totalDefense));
-
-        return $finalDamage;
+        return $context
+            ->withDamage($damage)
+            ->withLog(sprintf('[Math: %d attack vs %d defense]', $totalAttack, $totalDefense));
     }
 }
