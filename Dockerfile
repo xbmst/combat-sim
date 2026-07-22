@@ -6,15 +6,13 @@ FROM dunglas/frankenphp:1-php${PHP_VERSION}-alpine AS php_base
 WORKDIR /app
 
 RUN install-php-extensions \
-    intl \
-    opcache \
-    pcntl \
-    zip \
     pdo_pgsql \
     redis
 
 # Composer bootstrap
 FROM php_base AS composer_base
+
+RUN install-php-extensions zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -67,9 +65,9 @@ CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
 # Messenger worker
 FROM php_base AS worker
 
-COPY --from=builder --chown=www-data:www-data /app /app
+RUN install-php-extensions pcntl
 
-COPY docker/php/opcache.worker.ini /usr/local/etc/php/conf.d/zz-opcache.ini
+COPY --from=builder --chown=www-data:www-data /app /app
 
 RUN mkdir -p /app/var/cache /app/var/log \
     && chown -R www-data:www-data /app/var
