@@ -52,6 +52,8 @@ class RoundControllerTest extends WebTestCase
 
             self::assertIsArray($decoded);
             self::assertArrayHasKey('status', $decoded);
+            self::assertArrayHasKey('opponentName', $decoded);
+            self::assertNotSame('', $decoded['opponentName']);
 
         } while (
             $decoded['status'] !== BattleStatus::BATTLE_WON->value

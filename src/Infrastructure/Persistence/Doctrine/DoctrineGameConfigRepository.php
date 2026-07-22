@@ -148,7 +148,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
     public function getAllItems(): array
     {
         return $this->connection->fetchAllAssociative(
-            'SELECT id, name, modifier_attack as modifierAttack, modifier_defense as modifierDefense, modifier_agility as modifierAgility FROM item_schemas'
+            'SELECT id, name, category, modifier_attack as modifierAttack, modifier_defense as modifierDefense, modifier_agility as modifierAgility FROM item_schemas'
         );
     }
 }

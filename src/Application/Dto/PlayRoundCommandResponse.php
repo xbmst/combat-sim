@@ -16,6 +16,7 @@ readonly class PlayRoundCommandResponse
         public array $logs,
         public int $characterCurrentHp,
         public int $opponentCurrentHp,
+        public string $opponentName,
     ) {
     }
 }

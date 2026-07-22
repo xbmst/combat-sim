@@ -34,7 +34,8 @@ class RoundController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                content: new OA\JsonContent(ref: new Model(type: PlayRoundCommandResponse::class))
+                description: 'Simulate round result',
+                content: new OA\JsonContent(ref: new Model(type: PlayRoundCommandResponse::class)),
             )
         ]
     )]
@@ -53,6 +54,7 @@ class RoundController extends AbstractController
             'status' => $result->status->value,
             'characterHp' => $result->characterCurrentHp,
             'opponentHp' => $result->opponentCurrentHp,
+            'opponentName' => $result->opponentName,
             'logs' => $result->logs,
         ]);
     }

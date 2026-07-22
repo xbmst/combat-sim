@@ -6,7 +6,9 @@ namespace App\Application\Dto;
 
 class StartGameCommandResponse
 {
-    public function __construct(public string $gameId)
-    {
+    public function __construct(
+        public string $gameId,
+        public string $opponentName,
+    ) {
     }
 }

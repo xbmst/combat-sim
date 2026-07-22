@@ -87,7 +87,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
             $data['character']['items'],
         );
 
-        $opponent = new Warrior($data['character']['name'],
+        $opponent = new Warrior($data['opponent']['name'],
             new Stats(
                 $data['opponent']['maxHp'],
                 $data['opponent']['currentHp'],

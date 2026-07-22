@@ -55,6 +55,7 @@ class GameController extends AbstractController
 
         return $this->json([
             'gameId' => $result->gameId,
+            'opponentName' => $result->opponentName,
         ]);
     }
 

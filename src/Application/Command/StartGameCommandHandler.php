@@ -59,6 +59,9 @@ readonly class StartGameCommandHandler
             )
         );
 
-        return new StartGameCommandResponse($battle->getGameId());
+        return new StartGameCommandResponse(
+            $battle->getGameId(),
+            $battle->getOpponent()->name,
+        );
     }
 }

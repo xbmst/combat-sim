@@ -86,7 +86,8 @@ readonly class PlayRoundCommandHandler
             $status,
             $battle->getRoundLogs(),
             $battle->getCharacter()->stats->currentHp,
-            $battle->getOpponent()->stats->currentHp
+            $battle->getOpponent()->stats->currentHp,
+            $battle->getOpponent()->name,
         );
     }
 }

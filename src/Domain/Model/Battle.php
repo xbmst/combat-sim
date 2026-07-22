@@ -31,6 +31,7 @@ class Battle
     {
         // TODO: refactor to pipeline?
         [$attacker, $defender] = $turnPicker->pick($this->character, $this->opponent);
+        $this->roundLogs[] = $attacker->name.' starts first!';
 
         if (!$this->isAttackDodged($dice, $defender)) {
             $this->strike($attacker, $defender, $damageCalculator);
@@ -38,10 +39,14 @@ class Battle
             if ($this->isOpponentDead()) {
                 return;
             }
+        } else {
+            $this->roundLogs[] = sprintf('%s tries to hit but %s dodges!', $attacker->name, $defender->name);
         }
 
         if (!$this->isAttackDodged($dice, $attacker)) {
             $this->strike($defender, $attacker, $damageCalculator);
+        } else {
+            $this->roundLogs[] = sprintf('%s tries to hit but %s dodges!', $defender->name, $attacker->name);
         }
     }
 
