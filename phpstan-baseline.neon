@@ -1,13 +1,2 @@
 parameters:
-	ignoreErrors:
-		-
-			message: '#^Call to an undefined method App\\Domain\\Port\\ActiveBattleRepositoryInterface\:\:delete\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Application/Command/PlayRoundCommandHandler.php
-
-		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
-			count: 1
-			path: src/Domain/Port/GameConfigRepositoryInterface.php
+	ignoreErrors: []

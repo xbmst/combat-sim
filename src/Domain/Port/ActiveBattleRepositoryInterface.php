@@ -13,4 +13,6 @@ interface ActiveBattleRepositoryInterface
     public function findById(string $battleId): Battle;
 
     public function findByGameId(string $gameId): Battle;
+
+    public function delete(Battle $battle): void;
 }

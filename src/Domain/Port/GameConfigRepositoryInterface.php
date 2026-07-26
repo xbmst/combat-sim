@@ -27,7 +27,7 @@ interface GameConfigRepositoryInterface
     public function getRandomItems(int $limit = CharacterLoadout::MAX_ITEMS): array;
 
     /**
-     * @var Item[] $items
+     * @param Item[] $items
      * @return string[]
      */
     public function getItemNamesFromItems(array $items): array;
