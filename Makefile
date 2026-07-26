@@ -3,7 +3,7 @@ MAKEFILE_PATH := $(realpath $(lastword $(MAKEFILE_LIST)))
 MAKEFILE_DIR := $(dir $(MAKEFILE_PATH))
 DOCKER_COMPOSE_FILE := $(MAKEFILE_DIR)compose.yml
 DOCKER_COMPOSE_OVERRIDE_FILE := $(MAKEFILE_DIR)compose.override.yml
-FORWARD_ARG_TARGETS := dev build stop down test api-sh db-cli redis-cli
+FORWARD_ARG_TARGETS := dev build stop down test pstan pstan-baseline api-sh db-cli redis-cli
 RAW_EXTRA_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 EXTRA_ARGS := $(filter-out --,$(RAW_EXTRA_ARGS))
 HOST_DOCKER_USER := $(shell id -u):$(shell id -g)
@@ -64,6 +64,14 @@ down: ## Stop and remove containers and networks
 .PHONY: test
 test: ## Run API service PHPUnit tests
 	$(DOCKER_COMPOSE_DEV) exec api sh -lc 'APP_ENV=test APP_DEBUG=0 php bin/console cache:clear --no-warmup >/dev/null && APP_ENV=test APP_DEBUG=0 vendor/bin/phpunit $(EXTRA_ARGS)'
+
+.PHONY: pstan
+pstan: ## Run PHPStan analysis using baseline
+	$(DOCKER_COMPOSE_DEV) exec api vendor/bin/phpstan analyse $(EXTRA_ARGS)
+
+.PHONY: pstan-baseline
+pstan-baseline: ## Regenerate PHPStan baseline
+	$(DOCKER_COMPOSE_DEV) exec api vendor/bin/phpstan analyse --generate-baseline $(EXTRA_ARGS)
 
 .PHONY: api-sh
 api-sh: ## Open API container sh
