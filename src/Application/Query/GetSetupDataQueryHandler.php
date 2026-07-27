@@ -21,7 +21,7 @@ class GetSetupDataQueryHandler
             $this->gameConfigRepository->getAllItems(),
             [
                 'max_items' => CharacterLoadout::MAX_ITEMS,
-            ]
+            ],
         );
     }
 }

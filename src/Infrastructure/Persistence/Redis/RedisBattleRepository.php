@@ -15,7 +15,9 @@ use Redis;
 class RedisBattleRepository implements ActiveBattleRepositoryInterface
 {
     private const string PREFIX_BATTLE = 'battle:';
+
     private const string PREFIX_GAME = 'game:';
+
     private const int TTL_SECONDS = 7200; // 2 hours
 
     public function __construct(
@@ -55,21 +57,21 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
         ];
 
         $this->redis->setex(
-            self::PREFIX_BATTLE . $battle->getBattleId(),
+            self::PREFIX_BATTLE.$battle->getBattleId(),
             self::TTL_SECONDS,
-            json_encode($data, JSON_THROW_ON_ERROR)
+            json_encode($data, JSON_THROW_ON_ERROR),
         );
 
         $this->redis->setex(
-            self::PREFIX_GAME . $battle->getGameId(),
+            self::PREFIX_GAME.$battle->getGameId(),
             self::TTL_SECONDS,
-            $battle->getBattleId()
+            $battle->getBattleId(),
         );
     }
 
     public function findById(string $battleId): Battle
     {
-        $json = $this->redis->get(self::PREFIX_BATTLE . $battleId);
+        $json = $this->redis->get(self::PREFIX_BATTLE.$battleId);
         if (!$json) {
             throw new BattleNotFoundException(sprintf('Active battle "%s" not found or expired.', $battleId));
         }
@@ -88,7 +90,8 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
             $this->hydrateItems($data['character']['items']),
         );
 
-        $opponent = new Warrior($data['opponent']['name'],
+        $opponent = new Warrior(
+            $data['opponent']['name'],
             new Stats(
                 $data['opponent']['maxHp'],
                 $data['opponent']['currentHp'],
@@ -112,13 +115,13 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
     public function delete(Battle $battle): void
     {
-        $this->redis->del(self::PREFIX_BATTLE . $battle->getBattleId());
-        $this->redis->del(self::PREFIX_GAME . $battle->getGameId());
+        $this->redis->del(self::PREFIX_BATTLE.$battle->getBattleId());
+        $this->redis->del(self::PREFIX_GAME.$battle->getGameId());
     }
 
     public function findByGameId(string $gameId): Battle
     {
-        $battleId = $this->redis->get(self::PREFIX_GAME . $gameId);
+        $battleId = $this->redis->get(self::PREFIX_GAME.$gameId);
 
         if (!$battleId) {
             throw new BattleNotFoundException(sprintf('Active battle by game "%s" not found or expired.', $gameId));

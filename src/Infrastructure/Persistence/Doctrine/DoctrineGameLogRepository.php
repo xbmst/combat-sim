@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Port\GameLogRepositoryInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DoctrineGameLogRepository implements GameLogRepositoryInterface
 {

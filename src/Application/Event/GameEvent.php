@@ -11,7 +11,7 @@ abstract class GameEvent
         public string $gameId,
         public string $battleId,
         public string $battleStatus,
-        public array $battleLogs
+        public array $battleLogs,
     ) {
     }
 }

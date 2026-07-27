@@ -22,7 +22,6 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 readonly class PlayRoundCommandHandler
 {
-
     public function __construct(
         private ActiveBattleRepositoryInterface $battleRepository,
         private DamageCalculator $damageCalculator,
@@ -43,7 +42,7 @@ readonly class PlayRoundCommandHandler
             $this->battleRepository->delete($battle);
 
             $this->eventBus->dispatch(
-                new GameOverEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
+                new GameOverEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs()),
             );
 
             return $this->result(BattleStatus::GAME_OVER, $battle);
@@ -53,7 +52,7 @@ readonly class PlayRoundCommandHandler
             $this->battleRepository->delete($battle);
 
             $this->eventBus->dispatch(
-                new GameWonEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
+                new GameWonEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs()),
             );
 
             return $this->result(BattleStatus::GAME_WON, $battle);
@@ -63,13 +62,13 @@ readonly class PlayRoundCommandHandler
             $battle->setupNextBattle($this->opponentBuilder->build());
 
             $this->eventBus->dispatch(
-                new BattleWonEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
+                new BattleWonEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs()),
             );
 
             $result = $this->result(BattleStatus::BATTLE_WON, $battle);
         } else {
             $this->eventBus->dispatch(
-                new NextTurnEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs())
+                new NextTurnEvent($command->gameId, $battle->getBattleId(), $battle->getRoundLogs()),
             );
 
             $result = $this->result(BattleStatus::NEXT_TURN, $battle);

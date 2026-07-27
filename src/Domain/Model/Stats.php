@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Model;
 
 use App\Domain\ValueObject\GameClass;
-use App\Domain\ValueObject\Item;
 
 readonly class Stats
 {
@@ -25,7 +24,7 @@ readonly class Stats
             max(0, $this->currentHp - $amount),
             $this->attack,
             $this->defense,
-            $this->agility
+            $this->agility,
         );
     }
 
@@ -47,7 +46,7 @@ readonly class Stats
             $this->maxHp,
             $this->attack,
             $this->defense,
-            $this->agility
+            $this->agility,
         );
     }
 
@@ -58,7 +57,7 @@ readonly class Stats
             $this->currentHp,
             $this->attack + $attack,
             $this->defense + $defense,
-            $this->agility + $agility
+            $this->agility + $agility,
         );
     }
 }

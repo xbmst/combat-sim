@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Dto;
 
 use App\Domain\ValueObject\BattleStatus;
-
 use OpenApi\Attributes as OA;
 
 readonly class PlayRoundCommandResponse

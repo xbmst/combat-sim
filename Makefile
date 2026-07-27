@@ -84,3 +84,10 @@ db-cli: ## Open Database cli
 .PHONY: redis-cli
 redis-cli: ## Open Redis cli
 	$(DOCKER_COMPOSE_DEV) exec redis redis-cli $(EXTRA_ARGS)
+
+.PHONY: cs-check
+cs-check:
+	$(DOCKER_COMPOSE_DEV) exec api vendor/bin/php-cs-fixer check
+.PHONY: cs-fix
+cs-fix: ## Run CS fix
+	$(DOCKER_COMPOSE_DEV) exec api vendor/bin/php-cs-fixer fix

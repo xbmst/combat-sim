@@ -64,6 +64,9 @@ return (new PhpCsFixer\Config())
             'identical' => false,
             'less_and_greater' => false,
         ],
+        'phpdoc_align' => [
+            'align' => 'left',
+        ],
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

@@ -7,7 +7,6 @@ namespace App\Tests\Functional;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Uid\Uuid;
 
 class GameControllerTest extends WebTestCase
 {
@@ -31,7 +30,7 @@ class GameControllerTest extends WebTestCase
                 'characterClassId' => $decoded['classes'][0]['id'],
                 'equippedItemsIds' => [],
                 'targetBattles' => 1,
-            ], JSON_THROW_ON_ERROR)
+            ], JSON_THROW_ON_ERROR),
         );
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -68,12 +67,11 @@ class GameControllerTest extends WebTestCase
                 'characterClassId' => $characterClassId,
                 'equippedItemsIds' => $items,
                 'targetBattles' => 3,
-            ], JSON_THROW_ON_ERROR)
+            ], JSON_THROW_ON_ERROR),
         );
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
     }
-
 
     public function test_it_fetches_setup_data(): void
     {

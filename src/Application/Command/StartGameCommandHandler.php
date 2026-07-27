@@ -45,7 +45,7 @@ readonly class StartGameCommandHandler
             Uuid::v7()->toRfc4122(),
             $character,
             $this->opponentBuilder->build(),
-            $settings->targetBattles
+            $settings->targetBattles,
         );
 
         $this->activeBattleRepository->save($battle);
@@ -56,7 +56,7 @@ readonly class StartGameCommandHandler
                 $battle->getBattleId(),
                 $battle->getCharacter()->name,
                 $this->configRepository->getItemNamesFromItems($items),
-            )
+            ),
         );
 
         return new StartGameCommandResponse(

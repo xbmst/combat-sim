@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoundControllerTest extends WebTestCase
 {
-
     protected KernelBrowser $client;
 
     protected function setUp(): void
@@ -30,7 +29,7 @@ class RoundControllerTest extends WebTestCase
                 'characterClassId' => '123e4567-e89b-12d3-a456-426614174000',
                 'equippedItemsIds' => [],
                 'targetBattles' => $opponentsCount,
-            ], JSON_THROW_ON_ERROR)
+            ], JSON_THROW_ON_ERROR),
         );
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -54,7 +53,6 @@ class RoundControllerTest extends WebTestCase
             self::assertArrayHasKey('status', $decoded);
             self::assertArrayHasKey('opponentName', $decoded);
             self::assertNotSame('', $decoded['opponentName']);
-
         } while (
             $decoded['status'] !== BattleStatus::BATTLE_WON->value
             && $decoded['status'] !== BattleStatus::GAME_WON->value

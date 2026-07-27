@@ -12,8 +12,8 @@ use App\Domain\ValueObject\GameClass;
 use App\Domain\ValueObject\Item;
 use App\Infrastructure\Persistence\Doctrine\Entity\ClassSchema;
 use App\Infrastructure\Persistence\Doctrine\Entity\ItemSchema;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInterface
 {
@@ -60,6 +60,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
 
     /**
      * @param list<string> $ids
+     *
      * @return list<Item>
      */
     public function getItemsByIds(array $ids): array
@@ -73,16 +74,14 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
             ->getQuery()
             ->getResult();
 
-        return array_map(static function (ItemSchema $schema) {
-            return new Item(
-                $schema->id,
-                $schema->name,
-                $schema->category,
-                $schema->modifierAttack,
-                $schema->modifierDefense,
-                $schema->modifierAgility,
-            );
-        }, $schemas);
+        return array_map(static fn (ItemSchema $schema) => new Item(
+            $schema->id,
+            $schema->name,
+            $schema->category,
+            $schema->modifierAttack,
+            $schema->modifierDefense,
+            $schema->modifierAgility,
+        ), $schemas);
     }
 
     public function getRandomOpponentClass(): GameClass
@@ -119,30 +118,26 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
             throw new ItemClassNotFoundException();
         }
 
-        return array_map(static function (ItemSchema $schema) {
-            return new Item(
-                $schema->id,
-                $schema->name,
-                $schema->category,
-                $schema->modifierAttack,
-                $schema->modifierDefense,
-                $schema->modifierAgility
-            );
-        }, $schemas);
+        return array_map(static fn (ItemSchema $schema) => new Item(
+            $schema->id,
+            $schema->name,
+            $schema->category,
+            $schema->modifierAttack,
+            $schema->modifierDefense,
+            $schema->modifierAgility,
+        ), $schemas);
     }
 
     public function getItemNamesFromItems(array $items): array
     {
-        return array_map(static function (Item $item) {
-            return $item->name;
-        }, $items);
+        return array_map(static fn (Item $item) => $item->name, $items);
     }
 
     /** @return list<array<string, mixed>> */
     public function getAllClasses(): array
     {
         return $this->connection->fetchAllAssociative(
-            'SELECT id, name, base_hp as baseHp, base_attack as baseAttack, base_defense as baseDefense, base_agility as baseAgility FROM class_schemas'
+            'SELECT id, name, base_hp as baseHp, base_attack as baseAttack, base_defense as baseDefense, base_agility as baseAgility FROM class_schemas',
         );
     }
 
@@ -150,7 +145,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
     public function getAllItems(): array
     {
         return $this->connection->fetchAllAssociative(
-            'SELECT id, name, category, modifier_attack as modifierAttack, modifier_defense as modifierDefense, modifier_agility as modifierAgility FROM item_schemas'
+            'SELECT id, name, category, modifier_attack as modifierAttack, modifier_defense as modifierDefense, modifier_agility as modifierAgility FROM item_schemas',
         );
     }
 }

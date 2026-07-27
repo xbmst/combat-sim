@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Api;
 
 use App\Application\Command\PlayRoundCommand;
-use App\Application\Command\StartGameCommand;
 use App\Application\Dto\PlayRoundCommandResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -37,7 +36,7 @@ class RoundController extends AbstractController
                 description: 'Simulate round result',
                 content: new OA\JsonContent(ref: new Model(type: PlayRoundCommandResponse::class)),
             )
-        ]
+        ],
     )]
     public function nextRound(string $id): JsonResponse
     {

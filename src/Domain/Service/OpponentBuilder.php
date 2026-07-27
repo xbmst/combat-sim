@@ -21,7 +21,7 @@ class OpponentBuilder
         $items = $this->configRepository->getRandomItems();
 
         return new Warrior(
-            'The ' . $baseClass->name,
+            'The '.$baseClass->name,
             Stats::buildFromClass($baseClass),
             $items,
         );

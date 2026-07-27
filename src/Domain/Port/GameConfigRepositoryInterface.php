@@ -14,6 +14,7 @@ interface GameConfigRepositoryInterface
 
     /**
      * @param list<string> $ids
+     *
      * @return list<Item>
      */
     public function getItemsByIds(array $ids): array;
@@ -29,6 +30,7 @@ interface GameConfigRepositoryInterface
 
     /**
      * @param list<Item> $items
+     *
      * @return list<string>
      */
     public function getItemNamesFromItems(array $items): array;

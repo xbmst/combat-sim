@@ -42,7 +42,7 @@ class ClassSchema
         public int $baseAgility {
             get => $this->baseAgility;
             set => $value;
-        }
+        },
     ) {
     }
 }

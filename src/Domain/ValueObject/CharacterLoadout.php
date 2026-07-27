@@ -17,7 +17,7 @@ readonly class CharacterLoadout
      */
     public function __construct(
         public GameClass $gameClass,
-        public array $items
+        public array $items,
     ) {
         $this->validateItems($items);
     }
@@ -48,9 +48,7 @@ readonly class CharacterLoadout
             }
 
             if (isset($matched[$item->category])) {
-                throw new InvalidLoadoutException(
-                    sprintf('You cannot equip multiple items of the same category - %s.', $item->category)
-                );
+                throw new InvalidLoadoutException(sprintf('You cannot equip multiple items of the same category - %s.', $item->category));
             }
 
             $matched[$item->category] = true;

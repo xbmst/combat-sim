@@ -60,7 +60,7 @@ class Battle
     {
         $this->roundLogs[] = $result->logs;
 
-        $defender->stats = ($defender->takeDamage($result->damageToDeal))->stats;
+        $defender->stats = $defender->takeDamage($result->damageToDeal)->stats;
 
         $this->roundLogs[] = sprintf('%s hits %s for %d damage.', $attacker->name, $defender->name, $result->damageToDeal);
     }
@@ -94,7 +94,7 @@ class Battle
     public function setupNextBattle(Warrior $newOpponent): void
     {
         // TODO: wrappers
-        $this->currentRound++;
+        ++$this->currentRound;
         $this->roundLogs = [];
         $this->opponent = $newOpponent;
 
@@ -117,7 +117,7 @@ class Battle
         return (
             $this->isOpponentDead()
                 && ($this->currentRound >= $this->targetBattles)
-            )
+        )
             || $this->currentRound > GameLengthSettings::MAX_BATTLES;
     }
 

@@ -9,7 +9,8 @@ use App\Domain\ValueObject\BattleStatus;
 class GameOverEvent extends GameEvent
 {
     /** @param list<string|list<string>> $battleLogs */
-    public function __construct(string $gameId, string $battleId, array $battleLogs) {
+    public function __construct(string $gameId, string $battleId, array $battleLogs)
+    {
         parent::__construct($gameId, $battleId, BattleStatus::GAME_OVER->value, $battleLogs);
     }
 }
