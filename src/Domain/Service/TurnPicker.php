@@ -11,12 +11,10 @@ class TurnPicker
     /** @return array{Warrior, Warrior} */
     public function pick(Warrior $character, Warrior $opponent): array
     {
-        $adversaries = [$character, $opponent];
+        if ($character->stats->agility >= $opponent->stats->agility) {
+            return [$character, $opponent];
+        }
 
-        usort($adversaries, static function ($a, $b) {
-            return $b->stats->agility <=> $a->stats->agility;
-        });
-
-        return $adversaries;
+        return [$opponent, $character];
     }
 }

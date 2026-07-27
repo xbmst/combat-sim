@@ -16,6 +16,13 @@ class GameLog
     #[ORM\Column(type: Types::GUID)]
     public string $id { get => $this->id; }
 
+    /** @var list<string|list<string>> */
+    #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
+    public array $roundLogs = [] {
+        get => $this->roundLogs;
+        set => $this->roundLogs = [...$this->roundLogs, ...$value];
+    }
+
     /** @param list<string|list<string>> $roundLogs */
     public function __construct(
         #[ORM\Column(type: Types::STRING)]
@@ -24,10 +31,10 @@ class GameLog
         public string $battleId { get => $this->battleId; set => $value; },
         #[ORM\Column(type: Types::STRING)]
         public string $status { get => $this->status; set => $value; },
-        #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
-        public array $roundLogs { get => $this->roundLogs; set => $this->roundLogs[] = $value; },
+        array $roundLogs,
     )
     {
         $this->id = Uuid::v7()->toRfc4122();
+        $this->roundLogs = $roundLogs;
     }
 }

@@ -11,7 +11,7 @@ POSTGRES_PASSWORD=app_pass
 POSTGRES_USER=app_user
 ```
 
-From project root run one 
+From project root run one
 ```shell
 docker compose --env-file .env --env-file .env.local up -d
 # or
@@ -34,6 +34,22 @@ http://localhost:8080/api/doc
 - Run `/api/games/setup-data` to get a Classes and Items list
 - Run `/api/games/start` to receive a `gameId`
 - Run `/api/games/{gameId}/next-round` to play next round
+
+### Static analysis:
+
+PHPStan analyses `src` using the configuration in `phpstan.dist.neon`.
+
+```shell
+# Run analyze
+make pstan
+
+# Pass additional PHPStan arguments after `--`:
+make pstan -- --level 8
+
+
+# Regenerate the baseline:
+make pstan-baseline
+```
 
 ###### OPCache in dev:
 

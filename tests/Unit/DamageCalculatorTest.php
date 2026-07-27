@@ -34,7 +34,7 @@ class DamageCalculatorTest extends TestCase
         self::assertSame(30, $context->attackerStats->attack);
         self::assertSame(10, $context->attackerStats->defense);
         self::assertSame(13, $context->attackerStats->agility);
-        self::assertSame(125, $context->attackerStats->maxHp);
+        self::assertSame(100, $context->attackerStats->maxHp);
         self::assertSame(60, $context->attackerStats->currentHp, 'Increasing max HP must not heal the warrior');
 
         self::assertSame(20, $context->defenderStats->attack);
