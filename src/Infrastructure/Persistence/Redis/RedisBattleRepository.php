@@ -9,6 +9,7 @@ use App\Domain\Model\Battle;
 use App\Domain\Model\Stats;
 use App\Domain\Model\Warrior;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
+use App\Domain\ValueObject\Item;
 use Redis;
 
 class RedisBattleRepository implements ActiveBattleRepositoryInterface
@@ -84,7 +85,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
                 $data['character']['defense'],
                 $data['character']['agility'],
             ),
-            $data['character']['items'],
+            $this->hydrateItems($data['character']['items']),
         );
 
         $opponent = new Warrior($data['opponent']['name'],
@@ -95,7 +96,7 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
                 $data['opponent']['defense'],
                 $data['opponent']['agility'],
             ),
-            $data['opponent']['items'],
+            $this->hydrateItems($data['opponent']['items']),
         );
 
         return new Battle(
@@ -124,5 +125,32 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
         }
 
         return $this->findById($battleId);
+    }
+
+    /**
+     * @param array<array{
+     *     id: string,
+     *     name: string,
+     *     category: string,
+     *     modifierAttack: int,
+     *     modifierDefense: int,
+     *     modifierAgility: int
+     * }> $items
+     *
+     * @return Item[]
+     */
+    private function hydrateItems(array $items): array
+    {
+        return array_map(
+            static fn (array $item): Item => new Item(
+                $item['id'],
+                $item['name'],
+                $item['category'],
+                $item['modifierAttack'],
+                $item['modifierDefense'],
+                $item['modifierAgility'],
+            ),
+            $items,
+        );
     }
 }

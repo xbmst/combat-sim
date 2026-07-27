@@ -41,7 +41,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
 
     public function getClassByName(string $name): GameClass
     {
-        /** @var ClassSchema $classSchema */
+        /** @var ClassSchema|null $classSchema */
         $classSchema = $this->em->getRepository(ClassSchema::class)->findOneBy(['name' => $name]);
 
         if (!$classSchema) {
@@ -90,10 +90,6 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
         }
 
         $classSchema = $classSchemas[random_int(0, count($classSchemas) - 1)];
-
-        if (!$classSchema) {
-            throw new CharacterClassNotFoundException('Opponent class not found');
-        }
 
         return new GameClass(
             $classSchema->id,

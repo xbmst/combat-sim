@@ -35,9 +35,7 @@ readonly class CharacterLoadout
         }
     }
 
-    /**
-     * @param Item[] $items
-     */
+    /** @param array<mixed> $items */
     public function validateLoadoutUniqueness(array $items): void
     {
         $matched = [];
