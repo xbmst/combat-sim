@@ -1,0 +1,26 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    ports:
+      - "${API_PORT:?API_PORT must be set}:80"
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - .:/app
+      - /app/var
+
+  database:
+    ports:
+      - "${POSTGRES_PORT:?POSTGRES_PORT must be set}:5432"
+
+  redis:
+    ports:
+      - "${REDIS_PORT:?REDIS_PORT must be set}:6379"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
