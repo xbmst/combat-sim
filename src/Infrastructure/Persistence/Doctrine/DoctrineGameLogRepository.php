@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Port\GameLogRepositoryInterface;
-use App\Infrastructure\Persistence\Doctrine\Entity\GameLog;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\DBAL\Connection;
 
@@ -15,7 +14,7 @@ class DoctrineGameLogRepository implements GameLogRepositoryInterface
     {
     }
 
-    public function getLogByGameId(string $gameId)
+    public function getLogByGameId(string $gameId): string
     {
         $sql = 'SELECT id, game_id as gameId, battle_id as battleId, status, round_logs as logs FROM game_logs WHERE game_id = :id ORDER BY id DESC';
 
@@ -25,6 +24,12 @@ class DoctrineGameLogRepository implements GameLogRepositoryInterface
             throw new NotFoundHttpException('Game log not found.');
         }
 
-        return $result['logs'];
+        $logs = $result['logs'] ?? null;
+
+        if (!is_string($logs)) {
+            throw new NotFoundHttpException('Game log data is invalid.');
+        }
+
+        return $logs;
     }
 }

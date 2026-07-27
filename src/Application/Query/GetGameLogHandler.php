@@ -12,6 +12,7 @@ readonly class GetGameLogHandler
     {
     }
 
+    /** @return list<string|list<string>> */
     public function __invoke(string $gameId): array
     {
         return json_decode($this->gameLogRepository->getLogByGameId($gameId), true, 512, JSON_THROW_ON_ERROR);

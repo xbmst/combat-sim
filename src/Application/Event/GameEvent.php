@@ -6,6 +6,7 @@ namespace App\Application\Event;
 
 abstract class GameEvent
 {
+    /** @param list<string|list<string>> $battleLogs */
     public function __construct(
         public string $gameId,
         public string $battleId,

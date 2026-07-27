@@ -8,6 +8,7 @@ use App\Domain\Model\Warrior;
 
 class TurnPicker
 {
+    /** @return array{Warrior, Warrior} */
     public function pick(Warrior $character, Warrior $opponent): array
     {
         $adversaries = [$character, $opponent];

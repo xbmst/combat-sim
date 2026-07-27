@@ -10,6 +10,7 @@ use OpenApi\Attributes as OA;
 
 readonly class PlayRoundCommandResponse
 {
+    /** @param list<string|list<string>> $logs */
     public function __construct(
         #[OA\Property(description: 'Battle status', type: 'string', example: 'game_over')]
         public BattleStatus $status,

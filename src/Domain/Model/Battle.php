@@ -12,6 +12,7 @@ use App\Domain\ValueObject\StrikeResult;
 
 class Battle
 {
+    /** @param list<string|list<string>> $roundLogs */
     public function __construct(
         private readonly string $battleId,
         private readonly string $gameId,
@@ -84,6 +85,7 @@ class Battle
         return $this->currentRound;
     }
 
+    /** @return list<string|list<string>> */
     public function getRoundLogs(): array
     {
         return $this->roundLogs;

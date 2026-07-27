@@ -58,6 +58,10 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
         );
     }
 
+    /**
+     * @param list<string> $ids
+     * @return list<Item>
+     */
     public function getItemsByIds(array $ids): array
     {
         $qb = $this->em->createQueryBuilder();
@@ -134,6 +138,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
         }, $items);
     }
 
+    /** @return list<array<string, mixed>> */
     public function getAllClasses(): array
     {
         return $this->connection->fetchAllAssociative(
@@ -141,6 +146,7 @@ readonly class DoctrineGameConfigRepository implements GameConfigRepositoryInter
         );
     }
 
+    /** @return list<array<string, mixed>> */
     public function getAllItems(): array
     {
         return $this->connection->fetchAllAssociative(

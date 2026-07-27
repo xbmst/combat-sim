@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Application\Dto;
 
-use App\Domain\ValueObject\GameClass;
-use App\Domain\ValueObject\Item;
-
 readonly class GetSetupDataResponse
 {
+    /**
+     * @param list<array<string, mixed>> $classes
+     * @param list<array<string, mixed>> $items
+     * @param array<string, int> $rules
+     */
     public function __construct(
-        /** @var GameClass[] $classes */
         public array $classes,
-        /** @var Item[] $items */
         public array $items,
         public array $rules = [],
     ) {

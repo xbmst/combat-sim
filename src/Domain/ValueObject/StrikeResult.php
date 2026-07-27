@@ -8,6 +8,7 @@ use App\Domain\Model\Stats;
 
 readonly class StrikeResult
 {
+    /** @param list<string> $logs */
     public function __construct(
         public int $damageToDeal,
         public Stats $attackerStats,

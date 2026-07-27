@@ -13,7 +13,8 @@ interface GameConfigRepositoryInterface
     public function getClassById(string $id): GameClass;
 
     /**
-     * @return Item[]
+     * @param list<string> $ids
+     * @return list<Item>
      */
     public function getItemsByIds(array $ids): array;
 
@@ -22,17 +23,19 @@ interface GameConfigRepositoryInterface
     public function getClassByName(string $name): GameClass;
 
     /**
-     * @return Item[]
+     * @return list<Item>
      */
     public function getRandomItems(int $limit = CharacterLoadout::MAX_ITEMS): array;
 
     /**
-     * @param Item[] $items
-     * @return string[]
+     * @param list<Item> $items
+     * @return list<string>
      */
     public function getItemNamesFromItems(array $items): array;
 
+    /** @return list<array<string, mixed>> */
     public function getAllClasses(): array;
 
+    /** @return list<array<string, mixed>> */
     public function getAllItems(): array;
 }

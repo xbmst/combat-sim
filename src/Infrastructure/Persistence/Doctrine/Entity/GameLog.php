@@ -16,6 +16,7 @@ class GameLog
     #[ORM\Column(type: Types::GUID)]
     public string $id { get => $this->id; }
 
+    /** @param list<string|list<string>> $roundLogs */
     public function __construct(
         #[ORM\Column(type: Types::STRING)]
         public string $gameId { get => $this->gameId; set => $value; },

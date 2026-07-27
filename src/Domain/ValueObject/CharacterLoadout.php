@@ -22,12 +22,14 @@ readonly class CharacterLoadout
         $this->validateItems($items);
     }
 
+    /** @param array<mixed> $items */
     private function validateItems(array $items): void
     {
         $this->validateLoadoutSize($items);
         $this->validateLoadoutUniqueness($items);
     }
 
+    /** @param array<mixed> $items */
     public function validateLoadoutSize(array $items): void
     {
         if (count($items) > self::MAX_ITEMS) {

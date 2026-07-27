@@ -8,6 +8,7 @@ use App\Domain\ValueObject\BattleStatus;
 
 class GameStartedEvent extends GameEvent
 {
+    /** @param list<string> $equippedItemsNames */
     public function __construct(
         public string $gameId,
         public string $battleId,

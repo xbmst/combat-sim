@@ -9,6 +9,7 @@ use App\Domain\Model\Warrior;
 
 readonly class StrikeContext
 {
+    /** @param list<string> $logs */
     public function __construct(
         public Warrior $attacker,
         public Warrior $defender,
