@@ -6,11 +6,9 @@ namespace App\Infrastructure\Persistence\Redis;
 
 use App\Domain\Exception\BattleNotFoundException;
 use App\Domain\Model\Battle;
-use App\Domain\Model\Stats;
-use App\Domain\Model\Warrior;
 use App\Domain\Port\ActiveBattleRepositoryInterface;
-use App\Domain\ValueObject\Item;
 use Redis;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class RedisBattleRepository implements ActiveBattleRepositoryInterface
 {
@@ -22,44 +20,16 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
 
     public function __construct(
         private readonly Redis $redis,
+        private readonly SerializerInterface $serializer,
     ) {
     }
 
     public function save(Battle $battle): void
     {
-        $character = $battle->getCharacter();
-        $opponent = $battle->getOpponent();
-
-        $data = [
-            'battleId' => $battle->getBattleId(),
-            'gameId' => $battle->getGameId(),
-            'currentRound' => $battle->getCurrentRound(),
-            'roundLogs' => $battle->getRoundLogs(),
-            'targetBattles' => $battle->getTargetBattles(),
-            'character' => [ // TODO: toArray()
-                'maxHp' => $character->stats->maxHp,
-                'currentHp' => $character->stats->currentHp,
-                'attack' => $character->stats->attack,
-                'defense' => $character->stats->defense,
-                'agility' => $character->stats->agility,
-                'name' => $character->name,
-                'items' => $character->items,
-            ],
-            'opponent' => [
-                'maxHp' => $opponent->stats->maxHp,
-                'currentHp' => $opponent->stats->currentHp,
-                'attack' => $opponent->stats->attack,
-                'defense' => $opponent->stats->defense,
-                'agility' => $opponent->stats->agility,
-                'name' => $opponent->name,
-                'items' => $opponent->items,
-            ],
-        ];
-
         $this->redis->setex(
             self::PREFIX_BATTLE.$battle->getBattleId(),
             self::TTL_SECONDS,
-            json_encode($data, JSON_THROW_ON_ERROR),
+            $this->serializer->serialize($battle, 'json'),
         );
 
         $this->redis->setex(
@@ -72,45 +42,11 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
     public function findById(string $battleId): Battle
     {
         $json = $this->redis->get(self::PREFIX_BATTLE.$battleId);
-        if (!$json) {
+        if (!is_string($json)) {
             throw new BattleNotFoundException(sprintf('Active battle "%s" not found or expired.', $battleId));
         }
 
-        $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        // TODO: fromArray()
-        $character = new Warrior(
-            $data['character']['name'],
-            new Stats(
-                $data['character']['maxHp'],
-                $data['character']['currentHp'],
-                $data['character']['attack'],
-                $data['character']['defense'],
-                $data['character']['agility'],
-            ),
-            $this->hydrateItems($data['character']['items']),
-        );
-
-        $opponent = new Warrior(
-            $data['opponent']['name'],
-            new Stats(
-                $data['opponent']['maxHp'],
-                $data['opponent']['currentHp'],
-                $data['opponent']['attack'],
-                $data['opponent']['defense'],
-                $data['opponent']['agility'],
-            ),
-            $this->hydrateItems($data['opponent']['items']),
-        );
-
-        return new Battle(
-            $battleId,
-            $data['gameId'],
-            $character,
-            $opponent,
-            $data['targetBattles'],
-            $data['currentRound'],
-            $data['roundLogs'],
-        );
+        return $this->serializer->deserialize($json, Battle::class, 'json');
     }
 
     public function delete(Battle $battle): void
@@ -123,37 +59,10 @@ class RedisBattleRepository implements ActiveBattleRepositoryInterface
     {
         $battleId = $this->redis->get(self::PREFIX_GAME.$gameId);
 
-        if (!$battleId) {
+        if (!is_string($battleId)) {
             throw new BattleNotFoundException(sprintf('Active battle by game "%s" not found or expired.', $gameId));
         }
 
         return $this->findById($battleId);
-    }
-
-    /**
-     * @param array<array{
-     *     id: string,
-     *     name: string,
-     *     category: string,
-     *     modifierAttack: int,
-     *     modifierDefense: int,
-     *     modifierAgility: int
-     * }> $items
-     *
-     * @return Item[]
-     */
-    private function hydrateItems(array $items): array
-    {
-        return array_map(
-            static fn (array $item): Item => new Item(
-                $item['id'],
-                $item['name'],
-                $item['category'],
-                $item['modifierAttack'],
-                $item['modifierDefense'],
-                $item['modifierAgility'],
-            ),
-            $items,
-        );
     }
 }

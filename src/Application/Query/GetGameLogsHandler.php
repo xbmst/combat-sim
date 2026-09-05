@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Application\Query;
 
+use App\Domain\Model\GameLog;
 use App\Domain\Port\GameLogRepositoryInterface;
 
-readonly class GetGameLogHandler
+readonly class GetGameLogsHandler
 {
     public function __construct(private GameLogRepositoryInterface $gameLogRepository)
     {
     }
 
-    /** @return list<string|list<string>> */
+    /** @return list<GameLog> */
     public function __invoke(string $gameId): array
     {
-        return json_decode($this->gameLogRepository->getLogByGameId($gameId), true, 512, JSON_THROW_ON_ERROR);
+        return $this->gameLogRepository->getLogsByGameId($gameId);
     }
 }

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Port;
 
+use App\Domain\Model\GameLog;
+
 interface GameLogRepositoryInterface
 {
-    public function getLogByGameId(string $gameId): string;
+    /** @return list<GameLog> */
+    public function getLogsByGameId(string $gameId): array;
 }

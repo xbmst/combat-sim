@@ -4,32 +4,38 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Doctrine;
 
+use App\Domain\Model\GameLog;
 use App\Domain\Port\GameLogRepositoryInterface;
-use Doctrine\DBAL\Connection;
+use App\Infrastructure\Persistence\Doctrine\Entity\GameLog as GameLogEntity;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DoctrineGameLogRepository implements GameLogRepositoryInterface
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
-    public function getLogByGameId(string $gameId): string
+    /** @return list<GameLog> */
+    public function getLogsByGameId(string $gameId): array
     {
-        $sql = 'SELECT id, game_id as gameId, battle_id as battleId, status, round_logs as logs FROM game_logs WHERE game_id = :id ORDER BY id DESC';
+        $entities = $this->entityManager
+            ->getRepository(GameLogEntity::class)
+            ->findBy(['gameId' => $gameId], ['id' => 'ASC']);
 
-        $result = $this->connection->fetchAssociative($sql, ['id' => $gameId]);
-
-        if (!$result) {
+        if ($entities === []) {
             throw new NotFoundHttpException('Game log not found.');
         }
 
-        $logs = $result['logs'] ?? null;
-
-        if (!is_string($logs)) {
-            throw new NotFoundHttpException('Game log data is invalid.');
-        }
-
-        return $logs;
+        return array_map(
+            static fn (GameLogEntity $entity): GameLog => new GameLog(
+                $entity->id,
+                $entity->gameId,
+                $entity->battleId,
+                $entity->status,
+                $entity->roundLogs,
+            ),
+            $entities,
+        );
     }
 }

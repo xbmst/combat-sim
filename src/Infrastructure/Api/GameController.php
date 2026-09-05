@@ -6,7 +6,7 @@ namespace App\Infrastructure\Api;
 
 use App\Application\Command\StartGameCommand;
 use App\Application\Dto\StartGameCommandResponse;
-use App\Application\Query\GetGameLogHandler;
+use App\Application\Query\GetGameLogsHandler;
 use App\Application\Query\GetSetupDataQuery;
 use App\Application\Query\GetSetupDataQueryHandler;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -71,7 +71,7 @@ class GameController extends AbstractController
 
     #[Route('/api/games/{id}/logs', methods: [Request::METHOD_GET])]
     #[OA\Get(summary: 'Get game logs')]
-    public function getLogs(string $id, GetGameLogHandler $handler): JsonResponse
+    public function getLogs(string $id, GetGameLogsHandler $handler): JsonResponse
     {
         return $this->json($handler->__invoke($id));
     }
